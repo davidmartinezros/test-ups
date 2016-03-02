@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>MAX File Share</title>
+        <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css"/>
+        <link rel="stylesheet" href="../bower_components/ng-flow/css/styles.css"/>
+        <link rel="icon" type="image/png" href="../img/us-seal.png"/>
+    </head>
+    <body>
+        <nav class="navbar navbar-default" style="border-radius: 0; color: white; background-color: #428bca;">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a href="#" class="pull-left"><img style="width:3em;height:3em;margin-top:3px;" src="../img/us-seal.png"/></a>
+                    <a class="navbar-brand" th:href="@{/create}">MAX File Share - File Retrieval</a>
+                </div>
+            </div>
+        </nav>
+        <div class="container">
+            <div class="row">
+                <p/>
+                <p/>
+                <div class="col-md-6 col-md-offset-3" style="text-align: center">
+                    <p><b>File Uploaded!</b></p>
+                    <br/>
+                    <p>Copy and share the following link to enable others to access it:</p>
+                    <strong>
+                    <!--<a th:href="@{'/share/'+${publicId}}" th:text="${host}+'/share/'+${publicId}"></a>-->
+                    <div th:text="${host}+'/share/'+${publicId}"></div>
+                    </strong>
+                    <br/>
+                    <br/>
+                    <p/>
+                    <!--<p>-->
+                        <!--<a th:href="@{/create}">Upload another file</a>-->
+                    <!--</p>-->
+                </div>
+                <div class="col-sm-3">
+                    <strong><a th:href="@{/admin}">File Upload History</a></strong>
+                </div>
+            </div>
+        </div>
+
+        <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    </body>
+</html>

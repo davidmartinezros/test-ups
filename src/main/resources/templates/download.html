@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MAX File Share</title>
+    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css"/>
+    <link rel="stylesheet" href="../bower_components/ng-flow/css/styles.css"/>
+    <link rel="icon" type="image/png" href="../img/us-seal.png"/>
+</head>
+<body>
+    <nav class="navbar navbar-default" style="border-radius: 0; color: white; background-color: #428bca;">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a href="#" class="pull-left"><img style="width:3em;height:3em;margin-top:3px;" src="../img/us-seal.png"/></a>
+                <a class="navbar-brand" th:href="@{/create}">MAX File Share - File Retrieval</a>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3" style="text-align: left">
+                <p th:text="'File: ' + ${file.fileName} + ' ('+(${#numbers.formatDecimal(file.fileSize/1024d/1024d, 1, 2)})+'MB)'" ></p>
+                <form th:action="@{'/share/'+${publicId}}" method="post">
+                    <div th:if="${file.passwordProtected}" class="form-group">
+                        <label for="passwordField">Enter the Password provided to you by the file provider:</label>
+                        <input type="password" style="width:370px;" class="form-control" id="passwordField" name="password" placeholder="Password" />
+                        <p th:if="${pwError}" class="text-danger">Password is not valid</p>
+                    </div>
+                    <button type="submit" class="btn btn-default">Download</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

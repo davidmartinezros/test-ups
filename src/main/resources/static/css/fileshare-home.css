@@ -1,0 +1,79 @@
+.container {
+	margin-top: 25px;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #428bca;
+  border-color: #357ebd;
+  padding-left: 15px;
+  padding-right: 15px;
+  font-size: 16px;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary.focus, .btn-primary:active, .btn-primary.active, .open > .btn-primary.dropdown-toggle {
+  color: #fff;
+  background-color: #3071a9;
+  border-color: #285e8e;
+}
+
+.btn-primary:active, .btn-primary.active, .open > .btn-primary.dropdown-toggle {
+  background-image: none;
+}
+
+.btn-primary.disabled, .btn-primary.disabled:hover, .btn-primary.disabled:focus, .btn-primary.disabled.focus, .btn-primary.disabled:active, .btn-primary.disabled.active, .btn-primary[disabled], .btn-primary[disabled]:hover, .btn-primary[disabled]:focus, .btn-primary[disabled].focus, .btn-primary[disabled]:active, .btn-primary[disabled].active, fieldset[disabled] .btn-primary, fieldset[disabled] .btn-primary:hover, fieldset[disabled] .btn-primary:focus, fieldset[disabled] .btn-primary.focus, fieldset[disabled] .btn-primary:active, fieldset[disabled] .btn-primary.active {
+  background-color: #428bca;
+  border-color: #357ebd;
+}
+
+.btn-primary .badge {
+  color: #428bca;
+  background-color: #fff;
+}
+
+input[type=text], input[type=file] {
+	background-color: #ffffff;
+	border: none;
+	margin-left: 10px;
+}
+
+input[type=password] {
+	width: 30%;
+	height: 26px;
+}
+
+button[type=submit].btn {
+	/*margin-left: 26px;*/
+	padding-left: 15px;
+  padding-right: 15px;
+  font-size: 15px;
+  background-color: #e6e6e6;
+  margin-top: 5px;
+}
+
+button[type=submit].btn:hover {
+	background-color: #cccccc;
+}
+
+label {
+	font-size: 13px;
+}
+
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+	background-color: transparent;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+
+.input-group-btn:first-child > .btn {
+	border-top-right-radius: 4px;
+	border-bottom-right-radius: 4px;
+}
+
+.secondary {
+	margin-left: 25px;
+}
+
+.secondary input[type=password], .secondary .alert {
+	margin-left: 20px;
+}

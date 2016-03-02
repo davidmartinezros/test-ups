@@ -1,0 +1,57 @@
+server:
+    port: 7150
+spring:
+
+    application:
+        name: max-drive
+        file.rest.api.url: /api/*
+        host: https://fileshare.max.gov
+
+    thymeleaf.mode: LEGACYHTML5
+
+    multipart:
+        enabled: true
+        maxFileSize: 2000MB
+        maxRequestSize: 2000MB
+        fileSizeThreshold: 0
+        location: /services/sPaasTsP/tmp
+
+    share.files.maxage: 168
+
+    repository.base.path: /services/sPaasTsP/filebucket
+
+    server:
+        port: 7150
+
+    # CAS Identity Provider properties
+    cas:
+        url:
+            prefix: https://login.max.gov/cas
+            login: ${spring.cas.url.prefix}/login
+            rest: ${spring.cas.url.prefix}/rv1/tickets
+
+    mongo:
+        location: /services/sPaasTsP/.embedmongo/linux/rhel6/mongodb-linux-x86_64-2.6.11
+    data:
+        location: /services/sPaasTsP/data
+
+application:
+    virusScan:
+         host: localhost
+         port: 3310
+
+metrics:
+    jmx.enabled: true
+    spark:
+        enabled: false
+        host: localhost
+        port: 9999
+    graphite:
+        enabled: false
+        host: localhost
+        port: 2003
+        prefix: max_drive
+
+http:
+    cache:
+        timeToLiveInDays: 31

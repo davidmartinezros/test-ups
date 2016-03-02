@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" data-ng-app="FileManagerApp" ng-controller="GeneratePwdCtrl">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <title>MAX File Share</title>
+        <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css"/>
+        <link rel="stylesheet" href="../css/btn.css"/>
+        <link rel="stylesheet" href="../bower_components/ng-flow/css/styles.css"/>
+        <link rel="icon" type="image/png" href="../img/us-seal.png"/>
+        <!--<link rel="stylesheet" href="../css/fileshare-home.css"/>-->
+    </head>
+    <body flow-init="{
+               target: uploaderTarget(),
+               singleFile: true,
+               testMethod: 'GET',
+               testChunks: true,
+               query: flowQuery
+          }"
+          flow-prevent-drop
+          flow-drag-enter="style={border: '5px solid green'}"
+          flow-drag-leave="style={}"
+          ng-style="style">
+
+        <nav class="navbar navbar-default" style="border-radius: 0; color: white; background-color: #428bca;">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a href="#" class="pull-left"><img style="width:3em;height:3em;margin-top:3px;" src="../img/us-seal.png"/></a>
+                    <a class="navbar-brand" th:href="@{/create}">MAX File Share - File Retrieval</a>
+                </div>
+            </div>
+        </nav>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3" style="text-align: center">
+                    <p/>
+                    <!--<h1>MAX File Share</h1>-->
+                    <!--<label>Secure file sharing for the government</label>-->
+                </div>
+            </div>
+            <p/>
+
+            <form th:object="${uploadFormModel}" ng-submit="$flow.upload()" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col-md-4 col-md-offset-2">
+                            <div class="input-group">
+                                <div class="fileupload fileupload-new" data-provides="fileupload">
+                                        <span class="btn btn-primary btn-file">
+                                            <strong><span>Select a File to Share</span></strong>
+                                            <input type="file" flow-btn/>
+                                        </span>
+                                    <span class="fileupload-preview"></span>
+                                    <a href="#" class="close fileupload-exists" data-dismiss="fileupload"
+                                       style="float: none">×</a>
+
+                                    <p th:if="${#fields.hasErrors('file')}" th:errors="*{file}" class="text-danger">Please
+                                        specify a valid file.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <strong><a th:href="@{/admin}">File Upload History</a></strong>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col-md-4 col-md-offset-2">
+                            <div ng-repeat="file in $flow.files" class="transfer-box">
+                                {{file.relativePath}} ({{file.size}}bytes)
+                                <div class="progress progress-striped" ng-class="{active: file.isUploading()}">
+                                    <div class="progress-bar progress-bar-success" role="progressbar"
+                                         aria-valuenow="{{file.progress() * 100}}"
+                                         aria-valuemin="0"
+                                         aria-valuemax="100"
+                                         ng-style="{width: (file.progress() * 100) + '%'}">
+                                        <span class="sr-only">{{file.progress()}}% Complete</span>
+                                    </div>
+                                </div>
+                                <div class="btn-group">
+                                    <a class="btn btn-xs btn-warning" ng-click="file.pause()" ng-show="!file.paused && file.isUploading()">
+                                      Pause
+                                    </a>
+                                    <a class="btn btn-xs btn-warning" ng-click="file.resume()" ng-show="file.paused">
+                                      Resume
+                                    </a>
+                                    <a class="btn btn-xs btn-danger" ng-click="file.cancel()">
+                                      Cancel
+                                    </a>
+                                    <a class="btn btn-xs btn-info" ng-click="file.retry()" ng-show="file.error">
+                                      Retry
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <br/>
+
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col-md-6 col-md-offset-2">
+                            <span><label>File Expiration:</label> 7 days</span><br/>
+                            <span><label>Maximum Size:</label> 2GB</span><br/>
+                            <label for="passwordField"><b>Optional Password for Recipients to Open File:</b></label>
+                            <div class="input-group">
+                                <input type="text" style="width:310px;" class="form-control" ng-change="showAlert()"
+                                       id="passwordField" ng-model="password" placeholder="Password"/>
+                                <span id="password" class="input-group-addon" ng-click="generatePassword()">Generate</span>
+                            </div>
+                            <br/>
+                            <div id="pwd-msg" class="alert alert-danger alert-dismissable fade in" role="alert" style="width:310px;display:none;">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <strong>Reminder!</strong> Do not forget your password for this file share.
+                            </div>
+                            <div>
+                                <div class="drop" flow-drop ng-class="dropClass">
+                                    <button type="submit" value="SUBMIT" class="btn btn-default">Upload File</button>
+                                    <!--<span class="btn btn-default" flow-btn flow-directory ng-show="$flow.supportDirectory">Upload Folder</span>-->
+                                    <!--<b>OR</b>-->
+                                    <!--Drag And Drop your file here-->
+                                </div>
+                                <br/>
+                                <!--<div class="well">-->
+                                    <!--<a class="btn btn-small btn-success" ng-click="$flow.resume()">Resume all</a>-->
+                                    <!--<a class="btn btn-small btn-danger" ng-click="$flow.pause()">Pause all</a>-->
+                                    <!--<a class="btn btn-small btn-info" ng-click="$flow.cancel()">Cancel all</a>-->
+                                    <!--<span class="label label-info">Total Size: {{$flow.getSize()}}bytes</span>-->
+                                <!--</div>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+            </form>
+            <div class="col-md-8 col-md-offset-2"></div>
+
+        <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+        <!-- third party -->
+        <script src="../bower_components/angular/angular.min.js"></script>
+        <script src="../bower_components/angular-resource/angular-resource.js"></script>
+        <script src="../bower_components/angular-translate/angular-translate.min.js"></script>
+        <script src="../bower_components/angular-cache-buster/angular-cache-buster.js"></script>
+        <script src="../bower_components/angular-cookies/angular-cookies.min.js"></script>
+        <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="../bower_components/moment/min/moment.min.js"></script>
+        <script src="../bower_components/flow.js/dist/flow.min.js"></script>
+        <script src="../bower_components/ng-flow/dist/ng-flow.min.js"></script>
+
+        <script src="../src/js/btn.js"></script>
+        <!-- Uncomment if you need to use raw source code -->
+        <script src="../src/js/app.js"></script>
+        <script src="../src/js/services/dataservice.js"></script>
+        <script src="../src/js/services/dateutil.service.js"></script>
+        <script src="../src/js/services/upload.service.js"></script>
+        <script src="../src/js/controllers/generate-pwd-controller.js"></script>
+        <script src="../src/js/controllers/upload-button-controller.js"></script>
+    </body>
+</html>

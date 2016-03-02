@@ -1,0 +1,39 @@
+server:
+        port: 7150
+spring:
+
+    application:
+        name: max-drive
+        file.rest.api.url: /api/*
+        host: https://fileshare.test.max.gov
+
+    repository.base.path: /services/sPaasTsT/filebucket
+
+    multipart:
+        enabled: true
+        maxFileSize: 2000MB
+        maxRequestSize: 2000MB
+        fileSizeThreshold: 0
+        location: /services/sPaasTsT/tmp
+
+    share.files.maxage: 168
+
+    server:
+        port: 7150
+
+    # CAS Identity Provider properties
+    cas:
+        url:
+            prefix: https://login.max.gov/cas
+            login: ${spring.cas.url.prefix}/login
+            rest: ${spring.cas.url.prefix}/rv1/tickets
+
+    mongo:
+        location: /services/sPaasTsT/.embedmongo/linux/rhel6/mongodb-linux-x86_64-2.6.11
+    data:
+        location: /services/sPaasTsT/data
+
+application:
+    virusScan:
+         host: localhost
+         port: 3310

@@ -1,0 +1,116 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+    }
+
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.3.0.RELEASE")
+        classpath("io.spring.gradle:dependency-management-plugin:0.5.2.RELEASE")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'spring-boot'
+
+if (project.getProperty('profile') == 'prod') {
+    apply from: 'profile_prod.gradle'
+} else if (project.getProperty('profile') == 'test') {
+    apply from: 'profile_test.gradle'
+} else {
+    apply from: 'profile_dev.gradle'
+}
+
+jar {
+    baseName = 'MAXDrive'
+    version =  '0.1.0'
+}
+
+repositories {
+    mavenCentral()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+
+    compile fileTree(dir: "./libs", includes: ["*.jar"])
+
+    compile("org.springframework.statemachine:spring-statemachine-core:1.0.0.RELEASE")
+    compile("org.springframework.boot:spring-boot-starter-data-jpa")
+    compile("org.springframework.boot:spring-boot-starter-web") {
+//        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+    }
+//    compile("org.springframework.boot:spring-boot-legacy:1.0.2.RELEASE")
+    compile("org.springframework.boot:spring-boot-starter-data-mongodb")
+    compile("org.springframework.boot:spring-boot-starter-velocity")
+    compile("org.springframework.boot:spring-boot-starter-security")
+    compile("org.springframework.boot:spring-boot-starter-thymeleaf")
+    compile("org.springframework.boot:spring-boot-starter-batch")
+    compile("org.springframework.boot:spring-boot-actuator")
+    compile("org.springframework.security:spring-security-cas:3.2.5.RELEASE")
+
+    compile("org.jasig.cas.client:cas-client-core:3.3.3")
+
+    compile 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:1.50.0'
+    compile 'cz.jirutka.spring:embedmongo-spring:1.3.1'
+
+//    compile 'org.hsqldb:hsqldb:2.3.3'
+
+//    compile 'com.orientechnologies:orientdb-core:2.1.11'
+//    compile 'com.orientechnologies:orient-commons:1.7.10'
+//    compile 'com.orientechnologies:orientdb-object:2.1.11'
+//    compile 'org.jooq:jooq:3.7.2'
+
+//    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
+//    compile("org.apache.directory.studio:org.apache.commons.io:2.4")
+    compile 'commons-fileupload:commons-fileupload:1.3.1'
+    compile 'commons-io:commons-io:2.4'
+    compile 'commons-codec:commons-codec:1.10'
+    compile 'org.apache.httpcomponents:httpcore:4.4.4'
+
+    compile 'fr.ippon.spark.metrics:metrics-spark-reporter:1.2'
+    compile 'com.ryantenney.metrics:metrics-spring:3.0.4'
+    compile 'io.dropwizard.metrics:metrics-graphite:3.1.2'
+    compile 'io.dropwizard.metrics:metrics-core:3.1.2'
+    compile 'io.dropwizard.metrics:metrics-servlet:3.1.2'
+    compile 'io.dropwizard.metrics:metrics-servlets:3.1.2'
+    compile 'io.dropwizard.metrics:metrics-jvm:3.1.2'
+
+    compile 'fi.solita.clamav:clamav-client:1.0.0'
+    compile 'javax.inject:javax.inject:1'
+    compile 'fr.norad.logback.prettier:logback-prettier:0.5'
+    compile "com.h2database:h2"
+    compile "org.json:json:20140107"
+    compile "joda-time:joda-time"
+    compile "joda-time:joda-time-hibernate:1.3"
+
+    compile("net.sourceforge.nekohtml:nekohtml:1.9.21")
+
+
+    testCompile("junit:junit")
+    testCompile("org.springframework:spring-test:4.1.7.RELEASE")
+    testCompile("org.mockito:mockito-core:")
+}
+
+//mainClassName = 'gov.max.service.file.Application'
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.4'
+}
+
+task stage(type: Copy, dependsOn: [clean, assemble]) {
+    from jar.archivePath
+    into project.rootDir
+    rename {
+        'app.jar'
+    }
+}
+stage.mustRunAfter(clean)
+
+clean << {
+    project.file('app.jar').delete()
+}
