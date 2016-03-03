@@ -1,8 +1,8 @@
 package gov.max.service.file.servlet;
 
-import gov.max.service.file.service.upload.FlowInfo;
-import gov.max.service.file.service.upload.FlowInfoStorage;
-import gov.max.service.file.service.upload.HttpUtils;
+import gov.max.service.file.services.upload.FlowInfo;
+import gov.max.service.file.services.upload.FlowInfoStorage;
+import gov.max.service.file.services.upload.HttpUtils;
 
 import java.io.File;
 import java.io.IOException;

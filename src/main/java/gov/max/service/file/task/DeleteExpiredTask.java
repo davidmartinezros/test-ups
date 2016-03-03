@@ -1,8 +1,8 @@
 package gov.max.service.file.task;
 
 import gov.max.service.file.domain.model.SharedLink;
-import gov.max.service.file.domain.repository.SharedLinkRepository;
-import gov.max.service.file.service.storage.FileStorageService;
+import gov.max.service.file.domain.repositories.SharedLinkRepository;
+import gov.max.service.file.services.storage.FileStorageService;
 
 import org.slf4j.Logger;
 

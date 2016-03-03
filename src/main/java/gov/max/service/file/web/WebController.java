@@ -1,18 +1,14 @@
 package gov.max.service.file.web;
 
-import gov.max.service.file.domain.model.SharedLink;
-import gov.max.service.file.domain.model.Upload;
-import gov.max.service.file.service.management.exception.EncryptionException;
-import gov.max.service.file.service.storage.SharedLinkService;
-import gov.max.service.file.service.upload.UploadService;
-import gov.max.service.file.web.model.SuccessUploadFormModel;
+import gov.max.service.file.services.storage.SharedLinkService;
+import gov.max.service.file.services.upload.UploadService;
 import gov.max.service.file.web.model.UploadFormModel;
-import gov.max.service.file.service.management.FileShareManagementService;
-import gov.max.service.file.service.management.exception.InvalidPasswordException;
-import gov.max.service.file.service.management.exception.LinkExpiredException;
+import gov.max.service.file.services.management.FileShareManagementService;
+import gov.max.service.file.services.management.exception.InvalidPasswordException;
+import gov.max.service.file.services.management.exception.LinkExpiredException;
 import gov.max.service.file.util.FileUtil;
 import gov.max.service.file.util.HttpResponseUtil;
-import gov.max.service.file.service.management.FileInfo;
+import gov.max.service.file.services.management.FileInfo;
 import gov.max.service.file.util.SecurityUtils;
 
 import org.slf4j.Logger;
@@ -21,8 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -34,7 +28,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.FileNotFoundException;
 import java.util.*;
 
 @Configuration
