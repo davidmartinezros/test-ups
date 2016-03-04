@@ -7,7 +7,7 @@ import gov.max.service.file.services.management.exception.EncryptionException;
 import gov.max.service.file.util.EncryptionKey;
 import gov.max.service.file.util.EncryptionUtil;
 import gov.max.service.file.util.FileUtil;
-import gov.max.service.file.util.SecurityUtils;
+import gov.max.service.file.security.SecurityUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

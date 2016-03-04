@@ -7,7 +7,7 @@ import gov.max.service.file.domain.repositories.UploadRepository;
 import gov.max.service.file.events.UploadCompleteEventPublisher;
 import gov.max.service.file.services.storage.SharedLinkService;
 import gov.max.service.file.util.FileUtil;
-import gov.max.service.file.util.SecurityUtils;
+import gov.max.service.file.security.SecurityUtils;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileExistsException;

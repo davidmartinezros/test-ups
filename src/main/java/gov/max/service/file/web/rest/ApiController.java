@@ -3,6 +3,7 @@ package gov.max.service.file.web.rest;
 import com.canyapan.randompasswordgenerator.RandomPasswordGenerator;
 import com.canyapan.randompasswordgenerator.RandomPasswordGeneratorException;
 
+import com.codahale.metrics.annotation.Timed;
 import gov.max.service.file.domain.model.SharedLink;
 import gov.max.service.file.domain.model.Upload;
 import gov.max.service.file.domain.repositories.SharedLinkRepository;
@@ -17,7 +18,7 @@ import gov.max.service.file.services.upload.UploadService;
 import gov.max.service.file.services.upload.imp.ImporterControllerBase;
 import gov.max.service.file.util.HttpResponseUtil;
 import gov.max.service.file.web.model.ApiErrorModel;
-import gov.max.service.file.util.SecurityUtils;
+import gov.max.service.file.security.SecurityUtils;
 import gov.max.service.file.web.model.UploadFormModel;
 
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -28,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -44,6 +46,30 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * REST controller for managing files.
+ *
+ * <p>This class accesses the User entity, and needs to fetch its collection of authorities.</p>
+ * <p>
+ * For a normal use-case, it would be better to have an eager relationship between User and Authority,
+ * and send everything to the client side: there would be no DTO, a lot less code, and an outer-join
+ * which would be good for performance.
+ * </p>
+ * <p>
+ * We use a DTO for 3 reasons:
+ * <ul>
+ * <li>We want to keep a lazy association between the user and the authorities, because people will
+ * quite often do relationships with the user, and we don't want them to get the authorities all
+ * the time for nothing (for performance reasons). This is the #1 goal: we should not impact our users'
+ * application because of this use-case.</li>
+ * <li> Not having an outer join causes n+1 requests to the database. This is not a real issue as
+ * we have by default a second-level cache. This means on the first HTTP call we do the n+1 requests,
+ * but then all authorities come from the cache, so in fact it's much better than doing an outer join
+ * (which will get lots of data from the database, for each HTTP call).</li>
+ * <li> As this manages users, for security reasons, we'd rather have a DTO layer.</li>
+ * </p>
+ * <p>Another option would be to have a specific JPA entity graph to handle this case.</p>
+ */
 @Configuration
 @RestController
 public class ApiController extends ImporterControllerBase {
@@ -52,8 +78,7 @@ public class ApiController extends ImporterControllerBase {
         list, rename, copy, delete, savefile, editfile, addfolder, changepermissions, compress, extract
     }
 
-    private
-    @Value("${spring.repository.base.path}")
+    private @Value("${spring.repository.base.path}")
     String fileBasePath;
 
     @Autowired
@@ -102,7 +127,13 @@ public class ApiController extends ImporterControllerBase {
 //        return new ApiSuccessModel(request.getRequestURL() + "/" + publicId);
 //    }
 
-    @RequestMapping(value = "/share/manage/*", method = RequestMethod.GET)
+    /**
+     * GET  /download -> download a file.
+     */
+    @RequestMapping(value = "/share/manage/*",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
     public Object download(@RequestParam(required = false) String mode,
                            @RequestParam(required = false) String preview,
                            @RequestParam(required = true) String publicId,
@@ -131,7 +162,13 @@ public class ApiController extends ImporterControllerBase {
         }
     }
 
-    @RequestMapping(value = "/manage/*", method = RequestMethod.GET)
+    /**
+     * GET  /get -> get a file.
+     */
+    @RequestMapping(value = "/manage/*",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
     public Object get(@RequestParam(required = false) String mode,
                       @RequestParam(required = false) String preview,
                       @RequestParam(required = true) String publicId,
@@ -160,7 +197,13 @@ public class ApiController extends ImporterControllerBase {
         }
     }
 
-    @RequestMapping(value = "/share/manage/*", method = RequestMethod.POST)
+    /**
+     * POST  /listFiles -> general operation on files.
+     */
+    @RequestMapping(value = "/share/manage/*",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
     public void listFiles(HttpServletRequest request, HttpServletResponse response) throws Exception {
         try {
             if (ServletFileUpload.isMultipartContent(request)) {
@@ -173,8 +216,13 @@ public class ApiController extends ImporterControllerBase {
         }
     }
 
-    // Admin operations
-    @RequestMapping(value = "/manage/*", method = RequestMethod.POST)
+    /**
+     * POST  /admin -> admin operations on a file.
+     */
+    @RequestMapping(value = "/manage/*",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
     public void admin(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String userName = securityUtils.getUserDetails().getUsername();
         try {
@@ -189,7 +237,13 @@ public class ApiController extends ImporterControllerBase {
         }
     }
 
-    @RequestMapping(value = "/api/generatepwd", method = RequestMethod.GET, produces = "application/json")
+    /**
+     * GET  /getPwd -> get a generated password.
+     */
+    @RequestMapping(value = "/api/generatepwd",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
     public Map getPwd() throws RandomPasswordGeneratorException {
         RandomPasswordGenerator passwordGenerator = new RandomPasswordGenerator()
                 .withPasswordLength(8)
@@ -209,6 +263,8 @@ public class ApiController extends ImporterControllerBase {
     // =================== chunked file upload methods ============================
 
     /**
+     * POST  /saveChunk -> save a chunk upload.
+     *
      * The ng-flow requirements to handle upload of a single file chunk.
      *
      * @param uploadFormModel
@@ -225,7 +281,10 @@ public class ApiController extends ImporterControllerBase {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/importer", method = RequestMethod.POST)
+    @RequestMapping(value = "/importer",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
     public ResponseEntity<?> saveChunk(@Valid UploadFormModel uploadFormModel, Model model,
                                        BindingResult bindingResult) throws Exception {
 
@@ -263,6 +322,8 @@ public class ApiController extends ImporterControllerBase {
 
 
     /**
+     * GET  /testChunk -> test for chunk upload.
+     *
      * The ng-flow requirements to handle the test of a single file chunk.
      *
      * @param flowChunkNumber
@@ -279,7 +340,10 @@ public class ApiController extends ImporterControllerBase {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/importer", method = RequestMethod.GET)
+    @RequestMapping(value = "/importer",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
     public ResponseEntity<?> testChunk(
             @RequestParam("flowChunkNumber") int flowChunkNumber,
             @RequestParam("flowChunkSize") int flowChunkSize,
@@ -334,24 +398,31 @@ public class ApiController extends ImporterControllerBase {
     }
 
     /**
+     * GET  /getUniqueIdentifier -> get a unique identifier.
+     *
      * Override the default ng-flow unique identifier function with a call so that we can
      * track progress. We will generate a new identifier for each file. This prevents multiple
      * users from uploading a file of the same name and having a collision.
      *
      * @return a new unique identifier
      */
-    @RequestMapping(value = "/importer/getUniqueIdentifier", method = RequestMethod.GET)
+    @RequestMapping(value = "/importer/getUniqueIdentifier",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
     public String getUniqueIdentifier() {
         return uploadService.getAvailableIdentifier();
     }
 
     /**
-     * Get the specified upload.
+     * GET  /getUpload -> get the file upload.
      *
      * @param flowIdentifier
-     * @return
      */
-    @RequestMapping(value = "/importer/upload/{flowIdentifier}", method = RequestMethod.GET)
+    @RequestMapping(value = "/importer/upload/{flowIdentifier}",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
     public ResponseEntity<?> getUpload(@PathVariable String flowIdentifier) {
         return Optional
                 .ofNullable(uploadService.getUpload(flowIdentifier))
@@ -359,12 +430,17 @@ public class ApiController extends ImporterControllerBase {
                 .orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
-    @RequestMapping(value = "/importer/uploadSuccess", method = RequestMethod.GET)
+    /**
+     * GET  /uploadSuccess -> trigger successful upload events.
+     */
+    @RequestMapping(value = "/importer/uploadSuccess",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
     public Map uploadSuccess(@RequestParam(required = true) String fileName,
                              @RequestParam(required = true) String uniqueIdentifier,
                              @RequestParam(required = false) String paused,
-                             @RequestParam(required = false) String password,
-                             Model model) {
+                             @RequestParam(required = false) String password) {
         try {
             Upload upload = uploadService.getUpload(uniqueIdentifier);
             SharedLink sharedLink = sharedLinkService.saveSharedModel(upload, password);

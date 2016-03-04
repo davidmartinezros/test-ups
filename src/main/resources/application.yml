@@ -1,4 +1,41 @@
 spring:
     profiles.active: dev
 
+    data:
+        mongodb:
+            uri: mongodb://localhost:27017
+            database: maxdrive
+
 spring.thymeleaf.mode: LEGACYHTML5
+
+# ===================================================================
+# MAX Drive specific properties
+# ===================================================================
+
+max-drive:
+    async:
+        corePoolSize: 2
+        maxPoolSize: 50
+        queueCapacity: 10000
+
+    #cors: #By default CORS are not enabled. Uncomment to enable.
+        #allowed-origins: "*"
+        #allowed-methods: GET, PUT, POST, DELETE, OPTIONS
+        #allowed-headers: "*"
+        #exposed-headers:
+        #allow-credentials: true
+        #max-age: 1800
+
+    security:
+        rememberme:
+            # security key (this key should be unique for your application, and kept secret)
+            key: 78418762bc8e01480ff00ba3861f0b09e0517d3f
+
+    swagger:
+        title: MAX Drive API
+        description: MAX Drive API documentation
+        version: 0.0.1
+        termsOfServiceUrl:
+        contact:
+        license:
+        licenseUrl:

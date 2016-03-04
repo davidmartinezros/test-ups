@@ -1,5 +1,6 @@
 package gov.max.service.file.web;
 
+import com.codahale.metrics.annotation.Timed;
 import gov.max.service.file.services.storage.SharedLinkService;
 import gov.max.service.file.services.upload.UploadService;
 import gov.max.service.file.web.model.UploadFormModel;
@@ -9,7 +10,7 @@ import gov.max.service.file.services.management.exception.LinkExpiredException;
 import gov.max.service.file.util.FileUtil;
 import gov.max.service.file.util.HttpResponseUtil;
 import gov.max.service.file.services.management.FileInfo;
-import gov.max.service.file.util.SecurityUtils;
+import gov.max.service.file.security.SecurityUtils;
 
 import org.slf4j.Logger;
 
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -40,19 +42,17 @@ public class WebController extends WebMvcConfigurerAdapter {
     @Inject
     private Environment env;
 
-    private
-    @Value("${spring.repository.base.path}")
+    private @Value("${spring.repository.base.path}")
     String fileBasePath;
 
-    private
-    @Value("${spring.application.host}")
+    private @Value("${spring.application.host}")
     String appHost;
 
-    @Value("${application.virusScan.host}")
-    private String scannerHost;
+    private @Value("${application.virusScan.host}")
+    String scannerHost;
 
-    @Value("${application.virusScan.port}")
-    private int scannerPort;
+    private @Value("${application.virusScan.port}")
+    int scannerPort;
 
     @Inject
     private UploadService uploadService;
@@ -72,17 +72,31 @@ public class WebController extends WebMvcConfigurerAdapter {
     @Autowired
     private SharedLinkService sharedLinkService;
 
-    @RequestMapping(value = "/create", method = RequestMethod.GET)
+    /**
+     * GET  /showUpload -> display upload page.
+     */
+    @RequestMapping(value = "/create",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
     public String showUpload(UploadFormModel uploadFormModel) {
         return "upload";
     }
 
-    @RequestMapping(value = "/admin", method = RequestMethod.GET)
+    /**
+     * GET  /admin -> display admin page.
+     */
+     @RequestMapping(value = "/admin",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_XHTML_XML_VALUE)
+    @Timed
     public String admin(UploadFormModel uploadFormModel) {
         return "admin";
     }
 
     /**
+     * POST  /uploadFile -> Create a new file.
+     *
      * This method supports file upload using two strategies.
      *
      * Traditional Uploads - single file and complete file object (non-chunked)
@@ -94,7 +108,10 @@ public class WebController extends WebMvcConfigurerAdapter {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    @RequestMapping(value = "/create",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_XHTML_XML_VALUE)
+    @Timed
     public String uploadFile(@Valid UploadFormModel uploadFormModel, Model model,
                              BindingResult bindingResult) throws Exception {
 
@@ -135,7 +152,13 @@ public class WebController extends WebMvcConfigurerAdapter {
         }
     }
 
-    @RequestMapping(value = "/share/{publicId:[a-z0-9]{16}}", method = RequestMethod.GET)
+    /**
+     * GET  /showDownload -> display download page.
+     */
+    @RequestMapping(value = "/share/{publicId:[a-z0-9]{16}}",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_XHTML_XML_VALUE)
+    @Timed
     public String showDownload(@PathVariable String publicId, Model model) {
         try {
             FileInfo fileInfo = managementService.info(publicId);
@@ -151,7 +174,13 @@ public class WebController extends WebMvcConfigurerAdapter {
         }
     }
 
-    @RequestMapping(value = "/share/{publicId:[a-z0-9]{16}}", method = RequestMethod.POST)
+    /**
+     * GET  /download -> display manage page.
+     */
+    @RequestMapping(value = "/share/{publicId:[a-z0-9]{16}}",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_XHTML_XML_VALUE)
+    @Timed
     public String download(@PathVariable String publicId,
                            @RequestParam(required = false) String password,
                            Model model) throws Exception {
@@ -170,14 +199,26 @@ public class WebController extends WebMvcConfigurerAdapter {
         }
     }
 
-    @RequestMapping(value = "/api/listUrl/{publicId:[a-z0-9]{16}}", method = RequestMethod.POST)
+    /**
+     * POST  /list -> display expired page.
+     */
+    @RequestMapping(value = "/api/listUrl/{publicId:[a-z0-9]{16}}",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_XHTML_XML_VALUE)
+    @Timed
     public String list(@PathVariable String publicId,
                        @RequestParam(required = false) String password, Model model,
                        HttpServletResponse response) throws Exception {
         return "expired";
     }
 
-    @RequestMapping(value = "/uploadComplete", method = RequestMethod.GET)
+    /**
+     * GET  /success -> display success page.
+     */
+    @RequestMapping(value = "/uploadComplete",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_XHTML_XML_VALUE)
+    @Timed
     public String success(@RequestParam(required = true) String publicId, Model model) {
         model.addAttribute("publicId", publicId);
         model.addAttribute("host", appHost);

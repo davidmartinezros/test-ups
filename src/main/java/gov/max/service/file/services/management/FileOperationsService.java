@@ -5,7 +5,7 @@ import gov.max.service.file.domain.repositories.SharedLinkRepository;
 
 import gov.max.service.file.util.FileUtil;
 import gov.max.service.file.util.HttpResponseUtil;
-import gov.max.service.file.util.SecurityUtils;
+import gov.max.service.file.security.SecurityUtils;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;

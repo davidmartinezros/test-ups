@@ -1,0 +1,6 @@
+<mongoChangeLog>
+    <changeSet changeId="ChangeSet-1" author="max">
+        <script>
+        </script>
+    </changeSet>
+</mongoChangeLog>
