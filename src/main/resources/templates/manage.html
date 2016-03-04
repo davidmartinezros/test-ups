@@ -4,7 +4,7 @@
         <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
         <meta charset="utf-8"/>
         <link rel="icon" type="image/png" href="../img/us-seal.png"/>
-        <title>MAX File Share - File Retrieval</title>
+        <title>MAX Drive</title>
 
         <!-- third party -->
         <script src="../../bower_components/angular/angular.min.js"></script>
@@ -59,7 +59,7 @@
                 var defaults = config.$get();
                 $httpProvider.defaults.withCredentials = true; // send cookies
                 config.set({
-                    appName: 'MAX File Share - File Retrieval',
+                    appName: 'MAX Drive',
                     onlyFolders: false,
                     tplPath: 'src/templates',
                     allowedActions: angular.extend(defaults.allowedActions, {
