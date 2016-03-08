@@ -29,8 +29,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.attribute.*;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class FileOperationsService {
@@ -235,6 +237,13 @@ public class FileOperationsService {
                     el.put("type", model.getFileType());
                 }
 
+                Date expirationDate = model.getExpiration();
+                if (expirationDate != null) {
+                    Date date2 = new Date();
+                    long diff = expirationDate.getTime() - date2.getTime();
+                    long days = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+                    el.put("expires", days > 1 ? days + " Days" : days + " Day");
+                }
 
                 el.put("createdBy", securityUtils.getUserDetails().getUsername());
                 el.put("publicId", model.getPublicId());

@@ -24,6 +24,12 @@
                     </a>
                 </th>
                 <th class="hidden-sm hidden-xs">
+                    <a href="" ng-click="order('model.expires')">
+                        {{"expires" | translate}}
+                        <span class="sortorder" ng-show="predicate[1] === 'model.expires'" ng-class="{reverse:reverse}"></span>
+                    </a>
+                </th>
+                <th class="hidden-sm hidden-xs">
                     <a href="" ng-click="order('model.date')">
                         {{"date" | translate}}
                         <span class="sortorder" ng-show="predicate[1] === 'model.date'" ng-class="{reverse:reverse}"></span>
@@ -47,7 +53,6 @@
                     {{ fileNavigator.error }}
                 </td>
             </tr>
-
             <tr ng-repeat="item in fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse"
                 ng-show="!fileNavigator.requesting">
                 <td ng-right-click="touch(item)" style="width:1px;white-space:nowrap;">
@@ -69,10 +74,12 @@
                             </button>
                         </span>
                     </div>
-                    <!--{{item.model.shareLink}}-->
                 </td>
                 <td class="hidden-xs">
                     {{item.model.sizeKb()}}kb
+                </td>
+                <td class="hidden-xs">
+                    {{item.model.expires}}
                 </td>
                 <td class="hidden-sm hidden-xs">
                     {{item.model.date | formatDate }}

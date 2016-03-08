@@ -20,6 +20,7 @@
                 date: parseMySQLDate(model && model.date),
                 perms: new Chmod(model && model.rights),
                 content: model && model.content || '',
+                expires: model && model.expires || '',
                 recursive: false,
                 sizeKb: function() {
                     return Math.round(this.size / 1024, 1);
