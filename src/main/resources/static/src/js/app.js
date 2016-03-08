@@ -7,7 +7,8 @@
             'ngCookies',
             'ngResource',
             'ngCacheBuster',
-            'flow'
+            'flow',
+            'ngclipboard'
         ])
 
         .config(['flowFactoryProvider', function (flowFactoryProvider) {

@@ -60,8 +60,16 @@
                 <td class="hidden-sm hidden-xs">
                     <div ng-include="config.tplPath + '/item-toolbar.html'"></div>
                 </td>
-                <td class="hidden-xs">
-                    {{item.model.shareLink}}
+                <td class="hidden-xs col-md-5" ng-controller="ngclipboardCtrl">
+                    <div class="input-group col-xs-10">
+                        <input id="foo-{{$index}}" type="text" value="{{item.model.shareLink}}" readonly/>
+                        <span class="input-group-button">
+                            <button class="btn" type="button" ngclipboard="" ngclipboard-success="onSuccess(e);" ngclipboard-error="onError(e);" data-clipboard-target="#foo-{{$index}}">
+                                <span class="glyphicon glyphicon-copy"></span>
+                            </button>
+                        </span>
+                    </div>
+                    <!--{{item.model.shareLink}}-->
                 </td>
                 <td class="hidden-xs">
                     {{item.model.sizeKb()}}kb
