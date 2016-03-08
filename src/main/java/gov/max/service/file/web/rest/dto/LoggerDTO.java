@@ -1,12 +1,12 @@
 package gov.max.service.file.web.rest.dto;
 
 import ch.qos.logback.classic.Logger;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 public class LoggerDTO {
 
     private String name;
-
     private String level;
 
     public LoggerDTO(Logger logger) {

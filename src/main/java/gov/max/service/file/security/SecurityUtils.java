@@ -97,7 +97,10 @@ public class SecurityUtils {
             if (authentication.getPrincipal() instanceof AppUserDetails) {
                 springSecurityUser = (AppUserDetails) authentication.getPrincipal();
             }
+        } else {
+            logger.error("AppUserDetails is null!");
         }
+
         logger.debug("AppUserDetails {}", springSecurityUser);
         return springSecurityUser;
     }

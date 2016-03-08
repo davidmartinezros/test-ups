@@ -53,6 +53,7 @@
                 if (arguments[0] === "fileSuccess") {
                     var flowObj = arguments[1];
                     var password = $('#passwordField').val();
+                    var expiration = $('#expiration').val();
 
                     $.ajax({
                         url: "importer/uploadSuccess",
@@ -61,7 +62,8 @@
                             fileName: flowObj.file.name,
                             uniqueIdentifier: flowObj.uniqueIdentifier,
                             paused: flowObj.paused,
-                            password: password
+                            password: password,
+                            expiration: expiration
                         },
                         success: function(response) {
                             console.log("success");

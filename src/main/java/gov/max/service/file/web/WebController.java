@@ -1,6 +1,7 @@
 package gov.max.service.file.web;
 
 import com.codahale.metrics.annotation.Timed;
+
 import gov.max.service.file.services.storage.SharedLinkService;
 import gov.max.service.file.services.upload.UploadService;
 import gov.max.service.file.web.model.UploadFormModel;
@@ -139,7 +140,8 @@ public class WebController extends WebMvcConfigurerAdapter {
                     file.getSize(),
                     uploadFormModel.getPassword(),
                     securityUtils.getUserDetails().getUsername(),
-                    FileUtil.createSessionFolder(fileUtils.userFolder(fileBasePath, securityUtils.getUserDetails().getUsername()))
+                    FileUtil.createSessionFolder(fileUtils.userFolder(fileBasePath, securityUtils.getUserDetails().getUsername())),
+                    uploadFormModel.getExpiration()
                 );
 
                 model.addAttribute("publicId", publicId);

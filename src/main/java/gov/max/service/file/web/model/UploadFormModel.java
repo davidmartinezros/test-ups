@@ -20,6 +20,8 @@ public class UploadFormModel {
     private int flowTotalChunks;
     private long flowTotalSize;
 
+    private int expiration;
+
     public int getFlowChunkNumber() {
         return flowChunkNumber;
     }
@@ -106,5 +108,13 @@ public class UploadFormModel {
 
     public void setDestination(String destination) {
         this.destination = destination;
+    }
+
+    public int getExpiration() {
+        return expiration;
+    }
+
+    public void setExpiration(int expiration) {
+        this.expiration = expiration;
     }
 }

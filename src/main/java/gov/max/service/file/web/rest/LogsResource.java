@@ -8,6 +8,7 @@ import com.codahale.metrics.annotation.Timed;
 import gov.max.service.file.web.rest.dto.LoggerDTO;
 
 import org.slf4j.LoggerFactory;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,9 @@ import java.util.stream.Collectors;
 @RequestMapping("/api")
 public class LogsResource {
 
+    /**
+     * GET  /getList -> display list of logs.
+     */
     @RequestMapping(value = "/logs",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -35,6 +39,9 @@ public class LogsResource {
         
     }
 
+    /**
+     * PUT  /changeLevel -> change the level of the given log.
+     */
     @RequestMapping(value = "/logs", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Timed

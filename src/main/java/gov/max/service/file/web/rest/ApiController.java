@@ -4,6 +4,7 @@ import com.canyapan.randompasswordgenerator.RandomPasswordGenerator;
 import com.canyapan.randompasswordgenerator.RandomPasswordGeneratorException;
 
 import com.codahale.metrics.annotation.Timed;
+
 import gov.max.service.file.domain.model.SharedLink;
 import gov.max.service.file.domain.model.Upload;
 import gov.max.service.file.domain.repositories.SharedLinkRepository;
@@ -82,7 +83,7 @@ public class ApiController extends ImporterControllerBase {
     String fileBasePath;
 
     @Autowired
-    private Logger LOG;
+    private Logger log;
 
     @Inject
     private UploadService uploadService;
@@ -288,17 +289,17 @@ public class ApiController extends ImporterControllerBase {
     public ResponseEntity<?> saveChunk(@Valid UploadFormModel uploadFormModel, Model model,
                                        BindingResult bindingResult) throws Exception {
 
-        LOG.info("/api/importer: POST: {} -- {} -- {}",
+        log.info("/api/importer: POST: {} -- {} -- {}",
                 uploadFormModel.getFlowIdentifier(), uploadFormModel.getFlowChunkNumber(), uploadFormModel.getFlowTotalSize());
 
-        LOG.trace("flowChunkNumber: {}", uploadFormModel.getFlowChunkNumber());
-        LOG.trace("flowChunkSize: {}", uploadFormModel.getFlowChunkSize());
-        LOG.trace("flowCurrentChunkSize: {}", uploadFormModel.getFlowCurrentChunkSize());
-        LOG.trace("flowFilename: {}", uploadFormModel.getFlowFilename());
-        LOG.trace("flowIdentifier: {}", uploadFormModel.getFlowIdentifier());
-        LOG.trace("flowRelativePath: {}", uploadFormModel.getFlowRelativePath());
-        LOG.trace("flowTotalChunks: {}", uploadFormModel.getFlowTotalChunks());
-        LOG.trace("flowTotalSize: {}", uploadFormModel.getFlowTotalSize());
+        log.trace("flowChunkNumber: {}", uploadFormModel.getFlowChunkNumber());
+        log.trace("flowChunkSize: {}", uploadFormModel.getFlowChunkSize());
+        log.trace("flowCurrentChunkSize: {}", uploadFormModel.getFlowCurrentChunkSize());
+        log.trace("flowFilename: {}", uploadFormModel.getFlowFilename());
+        log.trace("flowIdentifier: {}", uploadFormModel.getFlowIdentifier());
+        log.trace("flowRelativePath: {}", uploadFormModel.getFlowRelativePath());
+        log.trace("flowTotalChunks: {}", uploadFormModel.getFlowTotalChunks());
+        log.trace("flowTotalSize: {}", uploadFormModel.getFlowTotalSize());
 
         try {
             Upload u = uploadService.saveChunk(
@@ -311,9 +312,9 @@ public class ApiController extends ImporterControllerBase {
                 uploadFormModel.getFlowTotalSize(),
                 uploadFormModel.getFile()
             );
-            LOG.debug("upload: {}", u);
+            log.debug("upload: {}", u);
         } catch (IOException e) {
-            LOG.error(e.getMessage());
+            log.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -355,14 +356,14 @@ public class ApiController extends ImporterControllerBase {
             @RequestParam("password") String password,
             @RequestParam("flowTotalSize") long flowTotalSize) throws Exception {
 
-        LOG.trace("flowChunkNumber: {}", flowChunkNumber);
-        LOG.trace("flowChunkSize: {}", flowChunkSize);
-        LOG.trace("flowCurrentChunkSize: {}", flowCurrentChunkSize);
-        LOG.trace("flowFilename: {}", flowFilename);
-        LOG.trace("flowIdentifier: {}", flowIdentifier);
-        LOG.trace("flowRelativePath: {}", flowRelativePath);
-        LOG.trace("flowTotalChunks: {}", flowTotalChunks);
-        LOG.trace("flowTotalSize: {}", flowTotalSize);
+        log.trace("flowChunkNumber: {}", flowChunkNumber);
+        log.trace("flowChunkSize: {}", flowChunkSize);
+        log.trace("flowCurrentChunkSize: {}", flowCurrentChunkSize);
+        log.trace("flowFilename: {}", flowFilename);
+        log.trace("flowIdentifier: {}", flowIdentifier);
+        log.trace("flowRelativePath: {}", flowRelativePath);
+        log.trace("flowTotalChunks: {}", flowTotalChunks);
+        log.trace("flowTotalSize: {}", flowTotalSize);
 
         boolean complete = false;
 
@@ -377,7 +378,7 @@ public class ApiController extends ImporterControllerBase {
                 flowTotalSize
             );
         } catch (IOException e) {
-            LOG.error(e.getMessage());
+            log.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
@@ -440,10 +441,11 @@ public class ApiController extends ImporterControllerBase {
     public Map uploadSuccess(@RequestParam(required = true) String fileName,
                              @RequestParam(required = true) String uniqueIdentifier,
                              @RequestParam(required = false) String paused,
-                             @RequestParam(required = false) String password) {
+                             @RequestParam(required = false) String password,
+                             @RequestParam(required = true) String expiration) {
         try {
             Upload upload = uploadService.getUpload(uniqueIdentifier);
-            SharedLink sharedLink = sharedLinkService.saveSharedModel(upload, password);
+            SharedLink sharedLink = sharedLinkService.saveSharedModel(upload, password, expiration);
 
             Map values = new HashMap();
             values.put("publicId", sharedLink.getPublicId());
@@ -452,7 +454,7 @@ public class ApiController extends ImporterControllerBase {
             return Collections.singletonMap("response", values);
 
         } catch (EncryptionException | FileNotFoundException e) {
-            LOG.error("Exception creating SharedLink Model: {}", e);
+            log.error("Exception creating SharedLink Model: {}", e);
             return Collections.singletonMap("response", "Exception creating SharedLink Model");
         }
     }

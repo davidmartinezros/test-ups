@@ -54,7 +54,7 @@ public class SharedLinkService {
     @Value("${spring.repository.base.path}")
     String fileBasePath;
 
-    public SharedLink saveSharedModel(Upload upload, String password) throws EncryptionException, FileNotFoundException {
+    public SharedLink saveSharedModel(Upload upload, String password, String expiration) throws EncryptionException, FileNotFoundException {
         SharedLink test = sharedLinkRepository.findByStorageId(upload.getId());
         if (test == null) {
             String fileName = upload.getOriginalName();
@@ -69,7 +69,10 @@ public class SharedLinkService {
                 String createdBy = securityUtils.getUserDetails().getUsername();
                 String storedFileId = storageService.save(encryptedStream, fileName, destination);
 
-                SharedLink sharedLink = this.saveSharedLink(fileName, fileType, upload.getTotalSize(), password, storedFileId, key, destination, createdBy);
+                SharedLink sharedLink = this.saveSharedLink(fileName,
+                        fileType, upload.getTotalSize(), password,
+                        storedFileId, key, destination, createdBy,
+                        Integer.parseInt(expiration));
 
                 return sharedLink;
             } catch (NoSuchAlgorithmException | InvalidKeyException | NoSuchPaddingException | InvalidAlgorithmParameterException e) {
@@ -82,8 +85,15 @@ public class SharedLinkService {
         }
     }
 
-    public SharedLink saveSharedLink(String fileName, String fileType, long fileSize, String password,
-                                     String storageId, EncryptionKey key, String destination, String createdBy) {
+    public SharedLink saveSharedLink(String fileName,
+                                     String fileType,
+                                     long fileSize,
+                                     String password,
+                                     String storageId,
+                                     EncryptionKey key,
+                                     String destination,
+                                     String createdBy,
+                                     Integer expiration) {
         String hashedPassword = password == null || "".equals(password) ? null : passwordEncoder.encode(password);
         String publicId = KeyGenerators.string().generateKey();
         SharedLink metaData = new SharedLink();
@@ -97,6 +107,7 @@ public class SharedLinkService {
         metaData.setEncryptionKey(key.getData());
         metaData.setFilePath(destination);
         metaData.setCreatedBy(createdBy);
+        metaData.setExpiration(expiration);
         return sharedLinkRepository.save(metaData);
     }
 

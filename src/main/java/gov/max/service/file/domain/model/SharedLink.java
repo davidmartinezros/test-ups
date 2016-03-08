@@ -6,6 +6,8 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.Calendar;
+import java.util.Date;
 
 @Document(collection = "SHARED_LINK")
 public class SharedLink implements Serializable { //extends AbstractAuditingEntity implements Serializable {
@@ -26,6 +28,9 @@ public class SharedLink implements Serializable { //extends AbstractAuditingEnti
 
     @Field
     private Boolean expired = false;
+
+    @Field
+    private Date expiration;
 
     @Field
     private Instant created;
@@ -105,6 +110,20 @@ public class SharedLink implements Serializable { //extends AbstractAuditingEnti
         } else {
             this.expired = false;
         }
+    }
+
+    public Date getExpiration() {
+        return expiration;
+    }
+
+    public void setExpiration(Integer expiration) {
+
+        Date date = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, expiration); // add expiration
+
+        this.expiration = cal.getTime();
     }
 
     public String getFileName() {

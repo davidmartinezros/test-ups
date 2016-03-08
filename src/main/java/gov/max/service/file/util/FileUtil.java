@@ -15,8 +15,8 @@ import fi.solita.clamav.ClamAVClient;
 
 import gov.max.service.file.domain.model.Upload;
 import gov.max.service.file.domain.repositories.UploadRepository;
-
 import gov.max.service.file.security.SecurityUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

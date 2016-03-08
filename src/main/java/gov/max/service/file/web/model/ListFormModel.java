@@ -1,7 +1,6 @@
 package gov.max.service.file.web.model;
 
 import java.io.Serializable;
-import java.util.Map;
 
 /**
  * Need to model this:

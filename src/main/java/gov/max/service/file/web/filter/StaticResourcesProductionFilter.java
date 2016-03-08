@@ -1,6 +1,5 @@
 package gov.max.service.file.web.filter;
 
-
 import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.*;

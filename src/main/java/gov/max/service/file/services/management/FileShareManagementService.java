@@ -49,12 +49,12 @@ public class FileShareManagementService {
     @Autowired
     private SharedLinkService sharedLinkService;
 
-    public String upload(InputStream inputStream, String fileName, String fileType, long fileSize, String password, String createdBy, String destination) throws EncryptionException {
+    public String upload(InputStream inputStream, String fileName, String fileType, long fileSize, String password, String createdBy, String destination, Integer expiration) throws EncryptionException {
         try {
             EncryptionKey key = encryptionUtil.generateKey();
             InputStream encryptedStream = encryptionUtil.encryptStream(inputStream, key);
             String storedFileId = storageService.save(encryptedStream, fileName, destination);
-            SharedLink sharedLink = sharedLinkService.saveSharedLink(fileName, fileType, fileSize, password, storedFileId, key, destination, createdBy);
+            SharedLink sharedLink = sharedLinkService.saveSharedLink(fileName, fileType, fileSize, password, storedFileId, key, destination, createdBy, expiration);
 
             LOG.info(String.format("Upload %s with id %s", fileName, sharedLink.getId()));
             return sharedLink.getPublicId();
