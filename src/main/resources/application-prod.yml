@@ -11,13 +11,13 @@
 # ===================================================================
 
 server:
-    port: 7150
+    port: 9150
 spring:
 
     application:
         name: max-drive
         file.rest.api.url: /api/*
-        host: https://fileshare.max.gov
+        host: https://drive.max.gov
 
     thymeleaf.mode: LEGACYHTML5
 

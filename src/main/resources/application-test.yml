@@ -11,13 +11,13 @@
 # ===================================================================
 
 server:
-        port: 7150
+        port: 8150
 spring:
 
     application:
         name: max-drive
         file.rest.api.url: /api/*
-        host: https://fileshare.test.max.gov
+        host: https://drive.test.max.gov
 
     repository.base.path: /services/sPaasTsT/filebucket
 
