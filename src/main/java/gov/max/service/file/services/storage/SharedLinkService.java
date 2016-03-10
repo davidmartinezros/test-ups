@@ -26,6 +26,7 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
+import java.util.Date;
 
 @Service
 public class SharedLinkService {
@@ -97,7 +98,7 @@ public class SharedLinkService {
         String hashedPassword = password == null || "".equals(password) ? null : passwordEncoder.encode(password);
         String publicId = KeyGenerators.string().generateKey();
         SharedLink metaData = new SharedLink();
-        metaData.setCreated(Instant.now());
+        metaData.setCreated(new Date());
         metaData.setPublicId(publicId);
         metaData.setStorageId(storageId);
         metaData.setFileName(fileName);

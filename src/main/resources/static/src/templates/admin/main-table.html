@@ -1,5 +1,5 @@
 <panel class="panel panel-default">
-    <div class="panel-heading"><b>File Upload History</b> - active files uploded within the past seven days</div>
+    <div class="panel-heading"><b>File Upload History</b> - active files uploded</div>
     <table class="table mb0 table-files">
         <thead>
             <tr>
@@ -56,11 +56,11 @@
             <tr ng-repeat="item in fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse"
                 ng-show="!fileNavigator.requesting">
                 <td ng-right-click="touch(item)" style="width:1px;white-space:nowrap;">
-                    <a href="" ng-click="item.download()" title="{{item.model.name}} ({{item.model.sizeKb()}}kb)">
+                    <!--<a href="" ng-click="item.download()" title="{{item.model.name}} ({{item.model.sizeKb()}}kb)">-->
                         <i class="glyphicon glyphicon-folder-close" ng-show="item.model.type === 'dir'"></i>
                         <i class="glyphicon glyphicon-file" ng-show="item.model.type === 'file'"></i>
                         {{item.model.name | strLimit : 64}}
-                    </a>
+                    <!--</a>-->
                 </td>
                 <td class="hidden-sm hidden-xs">
                     <div ng-include="config.tplPath + '/item-toolbar.html'"></div>

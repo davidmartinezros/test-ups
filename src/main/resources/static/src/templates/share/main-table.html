@@ -15,6 +15,12 @@
                 </a>
             </th>
             <th class="hidden-sm hidden-xs">
+                <a href="" ng-click="order('model.expires')">
+                    {{"expires" | translate}}
+                    <span class="sortorder" ng-show="predicate[1] === 'model.expires'" ng-class="{reverse:reverse}"></span>
+                </a>
+            </th>
+            <th class="hidden-sm hidden-xs">
                 <a href="" ng-click="order('model.date')">
                     {{"date" | translate}}
                     <span class="sortorder" ng-show="predicate[1] === 'model.date'" ng-class="{reverse:reverse}"></span>
@@ -47,17 +53,20 @@
         </tr>
         <tr ng-repeat="item in fileNavigator.fileList | filter: {model:{name: query}} | orderBy:predicate:reverse" ng-show="!fileNavigator.requesting">
             <td ng-right-click="touch(item)">
-                <a href="" ng-click="item.download()" title="{{item.model.name}} ({{item.model.sizeKb()}}kb)">
+                <!--<a href="" ng-click="item.download()" title="{{item.model.name}} ({{item.model.sizeKb()}}kb)">-->
                     <i class="glyphicon glyphicon-folder-close" ng-show="item.model.type === 'dir'"></i>
                     <i class="glyphicon glyphicon-file" ng-show="item.model.type === 'file'"></i>
                     {{item.model.name | strLimit : 64}}
-                </a>
+                <!--</a>-->
             </td>
             <td class="hidden-sm hidden-xs">
                 <div ng-include="config.tplPath + '/item-toolbar.html'"></div>
             </td>
             <td class="hidden-xs">
                 {{item.model.sizeKb()}}kb
+            </td>
+            <td class="hidden-xs">
+                {{item.model.expires}}
             </td>
             <td class="hidden-sm hidden-xs">
                 {{item.model.date | formatDate }}

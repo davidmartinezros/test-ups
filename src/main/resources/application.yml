@@ -8,6 +8,10 @@ spring:
 
 spring.thymeleaf.mode: LEGACYHTML5
 
+# minimum delay between api calls in milliseconds
+rate.limit.delay: 1000
+rate.limit.postpone.delay: 5000
+
 # ===================================================================
 # MAX Drive specific properties
 # ===================================================================

@@ -33,7 +33,7 @@ public class SharedLink implements Serializable { //extends AbstractAuditingEnti
     private Date expiration;
 
     @Field
-    private Instant created;
+    private Date created;
 
     @Field
     private String fileName;
@@ -80,11 +80,11 @@ public class SharedLink implements Serializable { //extends AbstractAuditingEnti
         this.storageId = storageId;
     }
 
-    public Instant getCreated() {
+    public Date getCreated() {
         return created;
     }
 
-    public void setCreated(Instant created) {
+    public void setCreated(Date created) {
         this.created = created;
     }
 

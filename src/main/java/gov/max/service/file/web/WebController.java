@@ -164,6 +164,10 @@ public class WebController extends WebMvcConfigurerAdapter {
     public String showDownload(@PathVariable String publicId, Model model) {
         try {
             FileInfo fileInfo = managementService.info(publicId);
+//            String createdBy = fileInfo.getCreatedBy();
+//            String userName = securityUtils.getUserDetails().getUsername();
+//            boolean owner = userName == null ? false : createdBy.equalsIgnoreCase(userName);
+
             model.addAttribute("file", fileInfo);
             model.addAttribute("publicId", publicId);
             if (fileInfo.isPasswordProtected()) {

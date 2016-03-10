@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <title>MAX File Share</title>
         <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css"/>
+        <link rel="stylesheet" href="../bower_components/sweetalert/dist/sweetalert.css"/>
         <link rel="stylesheet" href="../css/btn.css"/>
         <link rel="stylesheet" href="../bower_components/ng-flow/css/styles.css"/>
         <link rel="icon" type="image/png" href="../img/us-seal.png"/>
@@ -20,7 +21,8 @@
           flow-prevent-drop
           flow-drag-enter="style={border: '5px solid green'}"
           flow-drag-leave="style={}"
-          ng-style="style">
+          ng-style="style"
+          ng-controller="FlowEventsController">
 
         <nav class="navbar navbar-default" style="border-radius: 0; color: white; background-color: #428bca;">
             <div class="container-fluid">
@@ -51,14 +53,13 @@
                         <div class="col-md-4 col-md-offset-2">
                             <div class="input-group">
                                 <div class="fileupload fileupload-new" data-provides="fileupload">
-                                        <span class="btn btn-primary btn-file">
-                                            <strong><span>Select a File to Share</span></strong>
-                                            <input type="file" flow-btn/>
-                                        </span>
+                                    <span id="selectButton" class="btn btn-primary btn-file">
+                                        <strong><span>Select a File to Share</span></strong>
+                                        <input type="file" flow-btn/>
+                                    </span>
                                     <span class="fileupload-preview"></span>
                                     <a href="#" class="close fileupload-exists" data-dismiss="fileupload"
                                        style="float: none">×</a>
-
                                     <p th:if="${#fields.hasErrors('file')}" th:errors="*{file}" class="text-danger">Please
                                         specify a valid file.</p>
                                 </div>
@@ -88,7 +89,7 @@
                                     <a class="btn btn-xs btn-warning" ng-cloak ng-click="file.resume()" ng-show="file.paused">
                                       Resume
                                     </a>
-                                    <a class="btn btn-xs btn-danger" ng-cloak ng-click="file.cancel()">
+                                    <a class="btn btn-xs btn-danger" ng-cloak ng-click="cancelUpload(file)">
                                       Cancel
                                     </a>
                                     <a class="btn btn-xs btn-info" ng-cloak ng-click="file.retry()" ng-show="file.error">
@@ -126,8 +127,9 @@
                             <div class="input-group input-group-xs">
                                 <input type="text" style="width:310px;" class="form-control input-xs" ng-change="showAlert()"
                                        id="passwordField" ng-model="password" placeholder="Password"/>
-                                <span id="password" class="input-group-addon" ng-click="generatePassword()">Generate</span>
+                                <!--<span id="password" class="input-group-addon" ng-click="generatePassword()">Generate</span>-->
                             </div>
+                            <p><a href="#" ng-click="generatePassword()">Generate a Password Automatically</a></p>
                             <br/>
                             <div id="pwd-msg" class="alert alert-danger alert-dismissable fade in" role="alert" style="width:310px;display:none;">
                                 <button type="button" class="close input-xs" data-dismiss="alert" aria-label="Close">
@@ -137,7 +139,7 @@
                             </div>
                             <div>
                                 <div class="drop" flow-drop ng-class="dropClass">
-                                    <button type="submit" value="SUBMIT" class="btn btn-default">Upload File</button>
+                                    <button id="uploadButton" type="submit" value="SUBMIT" class="btn btn-default">Upload File</button>
                                     <!--<span class="btn btn-default" flow-btn flow-directory ng-show="$flow.supportDirectory">Upload Folder</span>-->
                                     <!--<b>OR</b>-->
                                     <!--Drag And Drop your file here-->
@@ -173,6 +175,8 @@
         <script src="../bower_components/ng-flow/dist/ng-flow.min.js"></script>
         <script src="../bower_components/clipboard/dist/clipboard.min.js"></script>
         <script src="../bower_components/ngclipboard/dist/ngclipboard.min.js"></script>
+        <script src="../bower_components/sweetalert/dist/sweetalert.min.js"></script>
+        <script src="../bower_components/ngSweetAlert/SweetAlert.min.js"></script>
 
         <script src="../src/js/btn.js"></script>
         <!-- Uncomment if you need to use raw source code -->
@@ -182,5 +186,6 @@
         <script src="../src/js/services/upload.service.js"></script>
         <script src="../src/js/controllers/generate-pwd-controller.js"></script>
         <script src="../src/js/controllers/upload-button-controller.js"></script>
+        <script src="../src/js/controllers/flow.events.controller.js"></script>
     </body>
 </html>

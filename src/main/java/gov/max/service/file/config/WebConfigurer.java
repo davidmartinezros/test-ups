@@ -8,6 +8,7 @@ import gov.max.service.file.web.filter.CachingHttpHeadersFilter;
 import gov.max.service.file.web.filter.StaticResourcesProductionFilter;
 import gov.max.service.file.web.filter.gzip.GZipServletFilter;
 
+import gov.max.service.file.web.interceptor.RateLimitInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +20,8 @@ import org.springframework.boot.context.embedded.MimeMappings;
 import org.springframework.boot.context.embedded.ServletContextInitializer;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.inject.Inject;
 import javax.servlet.*;
@@ -41,6 +44,14 @@ public class WebConfigurer implements ServletContextInitializer, EmbeddedServlet
 
     @Autowired(required = false)
     private MetricRegistry metricRegistry;
+
+//    @Autowired
+//    private RateLimitInterceptor rateLimitInterceptor;
+
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        registry.addInterceptor(rateLimitInterceptor);
+//    }
 
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {

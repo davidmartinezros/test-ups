@@ -27,7 +27,7 @@ spring:
         maxRequestSize: 2000MB
         fileSizeThreshold: 0
         location: /services/sPaasTsT/tmp
-]
+
     share.files.maxage: 168
 
     server:
