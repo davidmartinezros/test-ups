@@ -17,16 +17,16 @@
     <!--<button class="btn btn-sm btn-default" data-toggle="modal" data-target="#extract" ng-show="config.allowedActions.extract && item.isExtractable()" ng-click="touch(item); item.tempModel.name=''" title="{{'extract' | translate}}">-->
         <!--<i class="glyphicon glyphicon-export"></i>-->
     <!--</button>-->
-    <button class="btn btn-sm btn-default" ng-show="config.allowedActions.download && !item.isFolder()" ng-click="item.download()" title="{{'download' | translate}}">
-        <i class="glyphicon glyphicon-cloud-download"></i>
-        Download
+    <button class="btn btn-sm btn-default" ng-show="config.allowedActions.download && !item.isFolder()" ng-click="item.reactivate()" title="{{'reactivate' | translate}}">
+        <i class="glyphicon glyphicon-refresh"></i>
+        Re-activate
     </button>
     <!--<button class="btn btn-sm btn-default" ng-show="config.allowedActions.preview && item.isImage()" ng-click="openImagePreview(item)" title="{{'view_item' | translate}}">-->
         <!--<i class="glyphicon glyphicon-picture"></i>-->
     <!--</button>-->
-    <button class="btn btn-sm btn-danger" ng-show="config.allowedActions.remove" ng-click="item.remove()" title="{{'remove' | translate}}">
-        <i class="glyphicon glyphicon-trash"></i>
-    </button>
+    <!--<button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#delete" ng-show="config.allowedActions.remove" ng-click="touch(item)" title="{{'remove' | translate}}">-->
+        <!--<i class="glyphicon glyphicon-trash"></i>-->
+    <!--</button>-->
 </div>
 <div ng-show="item.inprocess">
     <button class="btn btn-sm" style="visibility: hidden">&nbsp;</button><span class="label label-warning">{{"wait" | translate}} ...</span>

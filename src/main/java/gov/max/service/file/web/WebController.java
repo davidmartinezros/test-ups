@@ -76,7 +76,7 @@ public class WebController extends WebMvcConfigurerAdapter {
     /**
      * GET  /showUpload -> display upload page.
      */
-    @RequestMapping(value = "/create",
+    @RequestMapping(value = "/",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
@@ -109,7 +109,7 @@ public class WebController extends WebMvcConfigurerAdapter {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/create",
+    @RequestMapping(value = "/",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_XHTML_XML_VALUE)
     @Timed

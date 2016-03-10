@@ -2,9 +2,20 @@
     'use strict';
     angular
         .module('FileManagerApp')
-        .factory('item', ['$http', '$q', '$translate', 'fileManagerConfig', 'chmod', 'moment', 'publicId', item]);
+        .factory('item', [
+            '$rootScope',
+            '$http',
+            '$q',
+            '$translate',
+            'fileManagerConfig',
+            'chmod',
+            'moment',
+            'publicId',
+            'SweetAlert',
+            item
+        ]);
 
-    function item($http, $q, $translate, fileManagerConfig, Chmod, moment, publicId) {
+    function item($rootScope, $http, $q, $translate, fileManagerConfig, Chmod, moment, publicId, SweetAlert) {
 
         var Item = function(model, path) {
             var rawModel = {
@@ -222,20 +233,59 @@
 
         Item.prototype.remove = function() {
             var self = this;
+
+            SweetAlert.swal({
+                title: "Are you sure?",
+                text: "You will be able to recover this file.",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: false
+            }, function() {
+
+                var deferred = $q.defer();
+                var data = {params: {
+                    mode: 'delete',
+                    path: self.tempModel.fullPath(),
+                    publicId: self.tempModel.publicId,
+                    session: self.tempModel.session
+                }};
+
+                self.inprocess = true;
+                self.error = '';
+                $http.post(fileManagerConfig.removeUrl, data).success(function(data) {
+                    self.deferredHandler(data, deferred);
+                    SweetAlert.swal("Deleted!", "Your file has been deleted.", "success");
+                    $rootScope.$broadcast("item::refresh");
+                }).error(function(data) {
+                    self.deferredHandler(data, deferred, $translate.instant('error_deleting'));
+                    SweetAlert.swal("Error", "An error occurred. Your file was not deleted :)", "error");
+                })['finally'](function() {
+                    self.inprocess = false;
+                });
+                return deferred.promise;
+            });
+        };
+
+        Item.prototype.reactivate = function() {
+            var self = this;
             var deferred = $q.defer();
             var data = {params: {
-                mode: 'delete',
+                mode: 'reactivate',
+                content: self.tempModel.content,
                 path: self.tempModel.fullPath(),
-                publicId: self.tempModel.publicId,
-                session: self.tempModel.session
+                publicId: self.tempModel.publicId
             }};
 
             self.inprocess = true;
             self.error = '';
-            $http.post(fileManagerConfig.removeUrl, data).success(function(data) {
+
+            $http.post(fileManagerConfig.reactivateUrl, data).success(function(data) {
+                $rootScope.$broadcast("item::refresh"); // trigger event that will refresh data on page
                 self.deferredHandler(data, deferred);
             }).error(function(data) {
-                self.deferredHandler(data, deferred, $translate.instant('error_deleting'));
+                self.deferredHandler(data, deferred, $translate.instant('error_modifying'));
             })['finally'](function() {
                 self.inprocess = false;
             });

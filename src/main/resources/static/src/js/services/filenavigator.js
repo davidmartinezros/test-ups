@@ -5,6 +5,7 @@
     angular
         .module('FileManagerApp')
         .service('fileNavigator', [
+            '$injector',
             '$http',
             '$q',
             'fileManagerConfig',
@@ -13,7 +14,7 @@
             fileNavigator
         ]);
 
-    function fileNavigator($http, $q, fileManagerConfig, Item, publicId) {
+    function fileNavigator($injector, $http, $q, fileManagerConfig, Item, publicId) {
 
         $http.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 

@@ -101,6 +101,7 @@
                 </a>
             </th>
             <th class="text-right"></th>
+            <th class="text-right"></th>
             <th class="hidden-xs">
                 <a href="" ng-click="order('model.shareLink')">
                     {{"share_link" | translate}}
@@ -150,6 +151,9 @@
                 <td class="hidden-sm hidden-xs">
                     <div ng-if="item.model.expired === 'true'">Expired</div>
                     <div ng-if="item.model.expired != 'true'">Deleted</div>
+                </td>
+                <td class="hidden-sm hidden-xs">
+                    <div ng-include="config.tplPath + '/item-toolbar-archive.html'"></div>
                 </td>
                 <td class="hidden-xs">
                     <del>{{item.model.shareLink}}</del>

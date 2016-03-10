@@ -54,7 +54,7 @@ public class FileOperationsService {
     private int scannerPort;
 
     enum Mode {
-        list, rename, copy, delete, savefile, editfile, addfolder, changepermissions, compress, extract
+        list, rename, copy, delete, savefile, editfile, addfolder, changepermissions, compress, extract, reactivate
     }
 
     private String DATE_FORMAT = "EEE, d MMM yyyy HH:mm:ss z"; // (Wed, 4 Jul 2001 12:08:56)
@@ -110,6 +110,9 @@ public class FileOperationsService {
                     break;
                 case rename:
                     responseJsonObject = rename(params);
+                    break;
+                case reactivate:
+                    responseJsonObject = reactivate(params);
                     break;
                 default:
                     throw new ServletException("not implemented");
@@ -249,6 +252,7 @@ public class FileOperationsService {
                 el.put("publicId", model.getPublicId());
                 el.put("shareLink", host + "/share/" + model.getPublicId());
                 el.put("session", fileUtil.extractFileNameFromUncPath(model.getFilePath()));
+                el.put("expiration", model.getExpiration());
                 el.put("deleted", model.getDeleted());
                 el.put("expired", model.getExpired());
 
@@ -337,15 +341,35 @@ public class FileOperationsService {
             model.setDeleted(true);
             sharedLinkRepository.save(model);
 
-            path = "/" + securityUtils.getUserDetails().getUsername() + "/" + session + path;
-            logger.debug("delete {}", path);
-            File srcFile = new File(fileBasePath, path);
-            if (!FileUtils.deleteQuietly(srcFile)) {
-                throw new Exception("Can't delete: " + srcFile.getAbsolutePath());
-            }
+            // We are no longer deleting the files
+//            path = "/" + securityUtils.getUserDetails().getUsername() + "/" + session + path;
+//            logger.debug("delete {}", path);
+//            File srcFile = new File(fileBasePath, path);
+//            if (!FileUtils.deleteQuietly(srcFile)) {
+//                throw new Exception("Can't delete: " + srcFile.getAbsolutePath());
+//            }
+
             return httpResponseUtil.success(params);
         } catch (Exception e) {
             logger.error("delete", e);
+            return httpResponseUtil.error(e.getMessage());
+        }
+    }
+
+    private JSONObject reactivate(JSONObject params) throws ServletException {
+        try {
+            String publicId = params.getString("publicId");
+
+            SharedLink model = sharedLinkRepository.findByPublicId(publicId);
+            model.setDeleted(false);
+            model.setExpired(false);
+            model.setExpiration(7); // default reactive to 7 days
+
+            sharedLinkRepository.save(model);
+
+            return httpResponseUtil.success(params);
+        } catch (Exception e) {
+            logger.error("reactivate", e);
             return httpResponseUtil.error(e.getMessage());
         }
     }

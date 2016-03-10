@@ -45,7 +45,6 @@
                 this.pause = true;
                 return this.pause;
             }
-
         };
 
         this.startCancel = function (file) {

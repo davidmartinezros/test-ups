@@ -12,6 +12,7 @@
             cancel: 'Cancel',
             close: 'Close',
             expires: 'Expires In',
+            reactivate: 'Re-activate',
             upload_file: 'Upload file',
             share_file: 'Share files',
             share_link: 'Share Link',

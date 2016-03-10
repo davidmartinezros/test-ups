@@ -15,7 +15,7 @@
             FileManagerCtrl
         ]);
 
-        function FileManagerCtrl($scope, $translate, $cookies, fileManagerConfig, Item, FileNavigator, FileUploader, moment, $timeout) {
+        function FileManagerCtrl($scope, $translate, $cookies, fileManagerConfig, Item, fileNavigator, fileUploader, moment, $timeout) {
 
             $scope.config = fileManagerConfig;
             $scope.reverse = false;
@@ -33,10 +33,14 @@
 
             $scope.query = '';
             $scope.temp = new Item();
-            $scope.fileNavigator = new FileNavigator();
-            $scope.fileUploader = FileUploader;
+            $scope.fileNavigator = new fileNavigator();
+            $scope.fileUploader = fileUploader;
             $scope.uploadFileList = [];
             $scope.viewTemplate = $cookies.viewTemplate || 'main-table.html';
+
+            $scope.$on("item::refresh", function() {
+                $scope.fileNavigator.refresh(); // refresh the list when an item is reactivated
+            });
 
             $scope.setTemplate = function (name) {
                 $scope.viewTemplate = $cookies.viewTemplate = name;

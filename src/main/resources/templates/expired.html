@@ -8,11 +8,12 @@
     <link rel="stylesheet" href="../bower_components/ng-flow/css/styles.css"/>
     <link rel="icon" type="image/png" href="../img/us-seal.png"/>
 </head>
+<style> * {  font-family: trajan_reg !important; }</style>
 <body>
     <nav class="navbar navbar-default" style="border-radius: 0; color: white; background-color: #428bca;">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" th:href="@{/create}">MAX Drive</a>
+                <a class="navbar-brand" th:href="@{/}">MAX Drive</a>
             </div>
         </div>
     </nav>
@@ -22,7 +23,7 @@
                 <!--<h1>MAX File Share</h1>-->
                 <p>File has expired and is not available anymore!</p>
                 <p>
-                    <small><a th:href="@{/create}">Upload another file</a></small>
+                    <small><a th:href="@{/}">Upload another file</a></small>
                 </p>
             </div>
         </div>

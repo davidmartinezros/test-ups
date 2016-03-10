@@ -17,6 +17,7 @@
             copyUrl: 'manage/copyUrl',
             removeUrl: 'manage/removeUrl',
             editUrl: 'manage/editUrl',
+            reactivateUrl: 'manage/reactivateUrl',
             getContentUrl: 'manage/getContentUrl',
             createFolderUrl: 'manage/createFolderUrl',
             downloadFileUrl: 'manage/downloadFileUrl',

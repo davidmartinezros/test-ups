@@ -4,7 +4,7 @@
         .module('FileManagerApp')
         .controller('ModalFileManagerCtrl', ['$scope', '$rootScope', 'fileNavigator', ModalFileManagerCtrl]);
 
-    function ModalFileManagerCtrl($scope, $rootScope, FileNavigator) {
+    function ModalFileManagerCtrl($scope, $rootScope, fileNavigator) {
         $scope.reverse = false;
         $scope.predicate = ['model.type', 'model.name'];
         $scope.order = function (predicate) {
@@ -12,7 +12,7 @@
             $scope.predicate[1] = predicate;
         };
 
-        $scope.fileNavigator = new FileNavigator();
+        $scope.fileNavigator = new fileNavigator();
         $rootScope.select = function (item, temp) {
             temp.tempModel.path = item.model.fullPath().split('/');
             $('#selector').modal('hide');
