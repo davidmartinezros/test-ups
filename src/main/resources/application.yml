@@ -8,6 +8,9 @@ spring:
 
 spring.thymeleaf.mode: LEGACYHTML5
 
+javers:
+    databaseName: ${spring.data.mongodb.database}
+
 # minimum delay between api calls in milliseconds
 rate.limit.delay: 1000
 rate.limit.postpone.delay: 5000

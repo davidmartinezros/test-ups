@@ -12,10 +12,11 @@
             'moment',
             'publicId',
             'SweetAlert',
+            '$timeout',
             item
         ]);
 
-    function item($rootScope, $http, $q, $translate, fileManagerConfig, Chmod, moment, publicId, SweetAlert) {
+    function item($rootScope, $http, $q, $translate, fileManagerConfig, Chmod, moment, publicId, SweetAlert, $timeout) {
 
         var Item = function(model, path) {
             var rawModel = {
@@ -47,9 +48,20 @@
             this.model = angular.copy(rawModel);
             this.tempModel = angular.copy(rawModel);
 
+            this.dateOptions = {
+                formatYear: 'yy',
+                startingDay: 1
+            };
+
+            this.today = new Date();
+
+            this.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+            this.format = this.formats[0];
+            this.opened = false;
+
             function parseMySQLDate(mysqlDate) {
                 if (mysqlDate) {
-                    return mysqlDate;
+                    return new Date(mysqlDate);
                 } else {
                     return moment().format('MMMM Do YYYY, h:mm:ss a');
                 }
@@ -337,6 +349,30 @@
             return deferred.promise;
         };
 
+
+        Item.prototype.changeItemExpirationDate = function(expirationDate) {
+            var self = this;
+            self.model.date = expirationDate;
+            var deferred = $q.defer();
+            var data = {params: {
+                mode: 'changeexpirationdate',
+                publicId: self.tempModel.publicId,
+                expirationDate: expirationDate
+            }};
+
+            self.inprocess = true;
+            self.error = '';
+            $http.post(fileManagerConfig.expirationDateUrl, data).success(function(data) {
+                self.deferredHandler(data, deferred);
+            }).error(function(data) {
+                self.deferredHandler(data, deferred, $translate.instant('error_changing_date'));
+            })['finally'](function() {
+                self.inprocess = false;
+            });
+            return deferred.promise;
+        };
+
+
         Item.prototype.isFolder = function() {
             return this.model.type === 'dir';
         };
@@ -356,6 +392,34 @@
         Item.prototype.isExtractable = function() {
             return !this.isFolder() && fileManagerConfig.isExtractableFilePattern.test(this.model.name);
         };
+        
+        // datepicker functions
+
+        Item.prototype.clear = function () {
+            this.model.date = null;
+        };
+
+        // Disable weekend selection
+        Item.prototype.disabled = function(date, mode) {
+            return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
+        };
+
+        Item.prototype.toggleMin = function() {
+            this.minDate = this.minDate ? null : new Date();
+        };
+        Item.prototype.toggleMin();
+
+        Item.prototype.open = function($event, item) {
+            $event.preventDefault();
+            $event.stopPropagation();
+
+            $timeout( function() {
+                item.opened = !item.opened;
+            }, 50);
+
+        };
+        
+        // end datepicker functions
 
         return Item;
     }

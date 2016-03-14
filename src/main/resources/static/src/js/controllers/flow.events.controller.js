@@ -1,6 +1,7 @@
 /**=========================================================
  * Module: FlowEventsController.js
- =========================================================*/
+ *=========================================================
+ */
 
 (function(angular, $) {
     'use strict';
@@ -32,10 +33,8 @@
 
             SweetAlert.swal({
                 title: 'File Uploaded!',
-                //text: 'Your file has been!',
                 type: 'success',
                 showCancelButton: false,
-                //confirmButtonColor: '#DD6B55',
                 confirmButtonText: 'Ok',
                 cancelButtonText: 'No, cancel plx!',
                 closeOnConfirm: true,

@@ -24,6 +24,7 @@
             compressUrl: 'manage/compressUrl',
             extractUrl: 'manage/extractUrl',
             permissionsUrl: 'manage/permissionsUrl',
+            expirationDateUrl: 'manage/expirationDateUrl',
 
             sidebar: true,
             onlyFolders: false,

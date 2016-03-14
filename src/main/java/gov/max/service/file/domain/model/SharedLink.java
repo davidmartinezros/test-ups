@@ -112,6 +112,14 @@ public class SharedLink implements Serializable { //extends AbstractAuditingEnti
         }
     }
 
+    public Date getExpirationDate() {
+        return expiration;
+    }
+
+    public void setExpirationDate(Date date) {
+        this.expiration = date;
+    }
+
     public Date getExpiration() {
         return expiration;
     }

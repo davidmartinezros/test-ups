@@ -37,6 +37,38 @@
             $scope.fileUploader = fileUploader;
             $scope.uploadFileList = [];
             $scope.viewTemplate = $cookies.viewTemplate || 'main-table.html';
+            $scope.minDate;
+
+            $scope.today = function() {
+                $scope.minDate = new Date();
+            };
+            $scope.today();
+
+
+            // begin datepicker
+            // $scope.today = function(item) {
+            //     item.today();
+            // };
+            //
+            // $scope.clear = function (item) {
+            //     item.clear();
+            // };
+            //
+            // // Disable weekend selection
+            // $scope.disabled = function(item, date, mode) {
+            //     item.disabled(date, mode)
+            // };
+            //
+            // $scope.toggleMin = function(item) {
+            //     item.toggleMin();
+            // };
+            //
+            // $scope.open = function(item, $event) {
+            //     item.open($event);
+            // };
+
+            // end datepicker
+
 
             $scope.$on("item::refresh", function() {
                 $scope.fileNavigator.refresh(); // refresh the list when an item is reactivated
@@ -112,6 +144,13 @@
             $scope.changePermissions = function (item) {
                 item.changePermissions().then(function () {
                     $scope.modal('changepermissions', true);
+                });
+            };
+
+            $scope.changeExpirationDate = function (item, expirationDate) {
+                item.changeItemExpirationDate(expirationDate).then(function () {
+                    $scope.fileNavigator.refresh();
+                    //console.log('fixed the date setting');
                 });
             };
 

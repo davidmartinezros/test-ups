@@ -9,7 +9,9 @@
             'ngCacheBuster',
             'flow',
             'ngclipboard',
-            'oitozero.ngSweetAlert'
+            'oitozero.ngSweetAlert',
+            'ui.bootstrap',
+            'ui.bootstrap.datepicker'
         ])
 
         .config(['flowFactoryProvider', function (flowFactoryProvider) {

@@ -9,6 +9,7 @@ import gov.max.service.file.util.EncryptionUtil;
 import gov.max.service.file.util.FileUtil;
 import gov.max.service.file.security.SecurityUtils;
 
+import org.javers.spring.annotation.JaversAuditable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,13 +28,13 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class SharedLinkService {
 
     private static final Logger LOG = LoggerFactory.getLogger(SharedLinkService.class);
 
-    @Autowired
     private SharedLinkRepository sharedLinkRepository;
 
     @Autowired
@@ -55,6 +56,32 @@ public class SharedLinkService {
     @Value("${spring.repository.base.path}")
     String fileBasePath;
 
+    @Autowired
+    public SharedLinkService(SharedLinkRepository sharedLinkRepository) {
+        this.sharedLinkRepository = sharedLinkRepository;
+    }
+
+    public SharedLink findSharedLink(String id) {
+        return sharedLinkRepository.findOne(id);
+    }
+
+    public List<SharedLink> findByCreatedBy(String createdBy) {
+        return sharedLinkRepository.findByCreatedBy(createdBy);
+    }
+
+    public SharedLink findByPublicId(String publicId) {
+        return sharedLinkRepository.findByPublicId(publicId);
+    }
+
+    @JaversAuditable
+    public SharedLink save(SharedLink model) {
+        return sharedLinkRepository.save(model);
+    }
+
+    public List<SharedLink> findByCreatedBefore(Instant created) {
+        return sharedLinkRepository.findByCreatedBefore(created);
+    }
+
     public SharedLink saveSharedModel(Upload upload, String password, String expiration) throws EncryptionException, FileNotFoundException {
         SharedLink test = sharedLinkRepository.findByStorageId(upload.getId());
         if (test == null) {
@@ -63,20 +90,20 @@ public class SharedLinkService {
                 String filePath = upload.getFileDirectoryPath() + File.separator + upload.getOriginalName();
                 EncryptionKey key = encryptionUtil.generateKey();
                 InputStream inputStream = storageService.load(filePath);
-                InputStream encryptedStream = encryptionUtil.encryptStream(inputStream, key);
+//                InputStream encryptedStream = encryptionUtil.encryptStream(inputStream, key);
 
                 String fileType = fileUtil.identifyFileTypeUsingFilesProbeContentType(filePath);
                 String destination = upload.getFileDirectoryPath();
                 String createdBy = securityUtils.getUserDetails().getUsername();
-                String storedFileId = storageService.save(encryptedStream, fileName, destination);
+//                String storedFileId = storageService.save(inputStream, fileName, destination);
 
                 SharedLink sharedLink = this.saveSharedLink(fileName,
                         fileType, upload.getTotalSize(), password,
-                        storedFileId, key, destination, createdBy,
+                        /*storedFileId*/ upload.getId(), key, destination, createdBy,
                         Integer.parseInt(expiration));
 
                 return sharedLink;
-            } catch (NoSuchAlgorithmException | InvalidKeyException | NoSuchPaddingException | InvalidAlgorithmParameterException e) {
+            } catch (NoSuchAlgorithmException e) {//| InvalidKeyException | NoSuchPaddingException | InvalidAlgorithmParameterException e) {
                 LOG.error("EncryptionException: {}", e);
                 throw new EncryptionException(e);
             }

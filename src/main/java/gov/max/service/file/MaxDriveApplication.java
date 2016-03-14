@@ -2,6 +2,8 @@ package gov.max.service.file;
 
 import gov.max.service.file.config.Constants;
 
+import org.javers.spring.boot.mongo.JaversMongoAutoConfiguration;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +15,7 @@ import org.springframework.boot.context.embedded.MultipartConfigFactory;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.SimpleCommandLinePropertySource;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -29,9 +32,10 @@ import java.util.Collection;
 @Configuration
 @SpringBootApplication
 @EnableScheduling
-public class Application extends SpringBootServletInitializer {
+@Import(value = JaversMongoAutoConfiguration.class)
+public class MaxDriveApplication extends SpringBootServletInitializer {
 
-    private static final Logger log = LoggerFactory.getLogger(Application.class);
+    private static final Logger log = LoggerFactory.getLogger(MaxDriveApplication.class);
 
     @Inject
     private Environment env;
@@ -50,11 +54,11 @@ public class Application extends SpringBootServletInitializer {
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(Application.class);
+        return application.sources(MaxDriveApplication.class);
     }
 
     public static void main(String[] args) throws UnknownHostException {
-        SpringApplication app = new SpringApplication(Application.class);
+        SpringApplication app = new SpringApplication(MaxDriveApplication.class);
         SimpleCommandLinePropertySource source = new SimpleCommandLinePropertySource(args);
 //        addDefaultProfile(app, source);
         Environment env = app.run(args).getEnvironment();

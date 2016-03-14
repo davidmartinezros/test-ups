@@ -1,8 +1,8 @@
 package gov.max.service.file.services.management;
 
 import gov.max.service.file.domain.model.SharedLink;
-import gov.max.service.file.domain.repositories.SharedLinkRepository;
 
+import gov.max.service.file.services.storage.SharedLinkService;
 import gov.max.service.file.util.FileUtil;
 import gov.max.service.file.util.HttpResponseUtil;
 import gov.max.service.file.security.SecurityUtils;
@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.attribute.*;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -54,13 +55,13 @@ public class FileOperationsService {
     private int scannerPort;
 
     enum Mode {
-        list, rename, copy, delete, savefile, editfile, addfolder, changepermissions, compress, extract, reactivate
+        list, rename, copy, delete, savefile, editfile, addfolder, changepermissions, changeexpirationdate, compress, extract, reactivate
     }
 
-    private String DATE_FORMAT = "EEE, d MMM yyyy HH:mm:ss z"; // (Wed, 4 Jul 2001 12:08:56)
+    private String DATE_FORMAT = "dd-MMM-yyyy"; // "EEE, d MMM yyyy HH:mm:ss z"; // (Wed, 4 Jul 2001 12:08:56)
 
     @Autowired
-    private SharedLinkRepository sharedLinkRepository;
+    private SharedLinkService sharedLinkService;
 
     @Autowired
     FileShareManagementService managementService;
@@ -86,6 +87,9 @@ public class FileOperationsService {
                     break;
                 case changepermissions:
                     responseJsonObject = changePermissions(params);
+                    break;
+                case changeexpirationdate:
+                    responseJsonObject = changeExpirationDate(params);
                     break;
                 case compress:
                     responseJsonObject = compress(params);
@@ -212,13 +216,14 @@ public class FileOperationsService {
     }
 
     private JSONObject getSharedFiles(boolean onlyFolders, String user) throws IOException {
-        List<SharedLink> vals = sharedLinkRepository.findByCreatedBy(user);
+        List<SharedLink> vals = sharedLinkService.findByCreatedBy(user);
         List<JSONObject> resultList = new ArrayList<>();
         SimpleDateFormat dt = new SimpleDateFormat(DATE_FORMAT);
         if (vals != null) {
             for (SharedLink model : vals) {
 
                 JSONObject el = new JSONObject();
+                Date expirationDate = model.getExpiration();
                 if (model.getDeleted() != null && model.getExpired() != null && !model.getDeleted() && !model.getExpired()) {
                     File f = FileUtils.getFile(model.getFilePath(), model.getFileName());
                     if (!f.exists() || (onlyFolders && !f.isDirectory())) {
@@ -230,17 +235,17 @@ public class FileOperationsService {
                     //                el.put("displayName", DateUtils.isTimeStampValid(model.getCreated().toString()) ?
                     //                        DateUtils.timeStampValue(model.getCreated().toString()) : model.getCreated().toString());
                     el.put("rights", getPermissions(f));
-                    el.put("date", dt.format(new Date(attrs.lastModifiedTime().toMillis())));
+                    el.put("date", dt.format(expirationDate));
                     el.put("size", f.length());
                     el.put("type", f.isFile() ? "file" : "dir");
                 } else {
                     el.put("name", model.getFileName());
-                    el.put("date", model.getCreated());
+                    el.put("date", dt.format(expirationDate));
                     el.put("size", model.getFileSize());
                     el.put("type", model.getFileType());
                 }
 
-                Date expirationDate = model.getExpiration();
+
                 if (expirationDate != null) {
                     Date date2 = new Date();
                     long diff = expirationDate.getTime() - date2.getTime();
@@ -337,9 +342,9 @@ public class FileOperationsService {
             String session = params.getString("session");
             String publicId = params.getString("publicId");
 
-            SharedLink model = sharedLinkRepository.findByPublicId(publicId);
+            SharedLink model = sharedLinkService.findByPublicId(publicId);
             model.setDeleted(true);
-            sharedLinkRepository.save(model);
+            sharedLinkService.save(model);
 
             // We are no longer deleting the files
 //            path = "/" + securityUtils.getUserDetails().getUsername() + "/" + session + path;
@@ -360,12 +365,12 @@ public class FileOperationsService {
         try {
             String publicId = params.getString("publicId");
 
-            SharedLink model = sharedLinkRepository.findByPublicId(publicId);
+            SharedLink model = sharedLinkService.findByPublicId(publicId);
             model.setDeleted(false);
             model.setExpired(false);
             model.setExpiration(7); // default reactive to 7 days
 
-            sharedLinkRepository.save(model);
+            sharedLinkService.save(model);
 
             return httpResponseUtil.success(params);
         } catch (Exception e) {
@@ -437,6 +442,23 @@ public class FileOperationsService {
             logger.error("changepermissions", e);
             return httpResponseUtil.error(e.getMessage());
         }
+    }
+
+    private JSONObject changeExpirationDate(JSONObject params) throws ServletException, ParseException {
+        String publicId = params.getString("publicId");
+        String expirationDate = params.getString("expirationDate");
+
+        String[] parts = expirationDate.split("T");
+        SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
+
+        SharedLink model = sharedLinkService.findByPublicId(publicId);
+        model.setDeleted(false);
+        model.setExpired(false);
+        model.setExpirationDate(dt.parse(parts[0]));
+
+        sharedLinkService.save(model);
+
+        return httpResponseUtil.success(params);
     }
 
     private JSONObject compress(JSONObject params) throws ServletException {

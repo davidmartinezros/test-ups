@@ -14,5 +14,6 @@ public final class Constants {
     public static final String SPRING_PROFILE_NATIVE = "native";
 
     public static final String SYSTEM_ACCOUNT = "system";
+    public static final String ANONYMOUS_ACCOUNT = "anonymous";
 
 }

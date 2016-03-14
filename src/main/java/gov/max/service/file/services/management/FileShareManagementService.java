@@ -2,7 +2,6 @@ package gov.max.service.file.services.management;
 
 import gov.max.service.file.services.management.exception.EncryptionException;
 import gov.max.service.file.domain.model.SharedLink;
-import gov.max.service.file.domain.repositories.SharedLinkRepository;
 import gov.max.service.file.services.management.exception.InvalidPasswordException;
 import gov.max.service.file.services.management.exception.LinkExpiredException;
 import gov.max.service.file.services.storage.FileStorageService;
@@ -28,14 +27,11 @@ import java.security.NoSuchAlgorithmException;
 public class FileShareManagementService {
 
     @Autowired
-    private Logger LOG;
+    private Logger log;
 
     private
     @Value("${spring.repository.base.path}")
     String fileBasePath;
-
-    @Autowired
-    private SharedLinkRepository sharedLinkRepository;
 
     @Autowired
     private FileStorageService storageService;
@@ -56,7 +52,7 @@ public class FileShareManagementService {
             String storedFileId = storageService.save(encryptedStream, fileName, destination);
             SharedLink sharedLink = sharedLinkService.saveSharedLink(fileName, fileType, fileSize, password, storedFileId, key, destination, createdBy, expiration);
 
-            LOG.info(String.format("Upload %s with id %s", fileName, sharedLink.getId()));
+            log.info(String.format("Upload %s with id %s", fileName, sharedLink.getId()));
             return sharedLink.getPublicId();
         } catch (NoSuchAlgorithmException | InvalidKeyException | NoSuchPaddingException | InvalidAlgorithmParameterException e) {
             throw new EncryptionException(e);
@@ -64,12 +60,12 @@ public class FileShareManagementService {
     }
 
     public FileInfo info(String publicId) throws LinkExpiredException {
-        SharedLink sharedLink = sharedLinkRepository.findByPublicId(publicId);
+        SharedLink sharedLink = sharedLinkService.findByPublicId(publicId);
         if (sharedLink == null) {
-            LOG.info(String.format("Link %s is expired", publicId));
+            log.info(String.format("Link %s is expired", publicId));
             throw new LinkExpiredException();
         } else {
-            LOG.info(String.format("Info %s", sharedLink.getId()));
+            log.info(String.format("Info %s", sharedLink.getId()));
             return new FileInfo(sharedLink.getFileName(),
                     sharedLink.getFilePath(),
                     sharedLink.getCreatedBy(),
@@ -81,15 +77,15 @@ public class FileShareManagementService {
     }
 
     public FileInfo infoProtected(String publicId, String password) throws InvalidPasswordException, LinkExpiredException {
-        SharedLink sharedLink = sharedLinkRepository.findByPublicId(publicId);
+        SharedLink sharedLink = sharedLinkService.findByPublicId(publicId);
         if (sharedLink == null) {
-            LOG.info(String.format("Link %s is expired", publicId));
+            log.info(String.format("Link %s is expired", publicId));
             throw new LinkExpiredException();
         } else if (sharedLink.getPassword() != null && (password == null || !passwordEncoder.matches(password, sharedLink.getPassword()))) {
-            LOG.info(String.format("Invalid password for download %s", sharedLink.getId()));
+            log.info(String.format("Invalid password for download %s", sharedLink.getId()));
             throw new InvalidPasswordException();
         } else {
-            LOG.info(String.format("Info %s", sharedLink.getId()));
+            log.info(String.format("Info %s", sharedLink.getId()));
             return new FileInfo(sharedLink.getFileName(),
                     sharedLink.getFilePath(),
                     sharedLink.getCreatedBy(),
@@ -101,12 +97,12 @@ public class FileShareManagementService {
     }
 
     public FileDownload download(String publicId, String password) throws InvalidPasswordException, LinkExpiredException, EncryptionException {
-        SharedLink sharedLink = sharedLinkRepository.findByPublicId(publicId);
+        SharedLink sharedLink = sharedLinkService.findByPublicId(publicId);
         if (sharedLink == null) {
-            LOG.info(String.format("Link %s is expired", publicId));
+            log.info(String.format("Link %s is expired", publicId));
             throw new LinkExpiredException();
         } else if (sharedLink.getPassword() != null && (password == null || !passwordEncoder.matches(password, sharedLink.getPassword()))) {
-            LOG.info(String.format("Invalid password for download %s", sharedLink.getId()));
+            log.info(String.format("Invalid password for download %s", sharedLink.getId()));
             throw new InvalidPasswordException();
         } else {
             return getFileDownload(sharedLink);
@@ -114,9 +110,9 @@ public class FileShareManagementService {
     }
 
     public FileDownload downloadClear(String publicId) throws InvalidPasswordException, LinkExpiredException, EncryptionException {
-        SharedLink sharedLink = sharedLinkRepository.findByPublicId(publicId);
+        SharedLink sharedLink = sharedLinkService.findByPublicId(publicId);
         if (sharedLink == null) {
-            LOG.info(String.format("Link %s is expired", publicId));
+            log.info(String.format("Link %s is expired", publicId));
             throw new LinkExpiredException();
         } else {
             return getFileDownload(sharedLink);
@@ -128,16 +124,16 @@ public class FileShareManagementService {
             EncryptionKey key = encryptionUtil.generateKey(sharedLink.getEncryptionKey());
             InputStream encryptedStream = storageService.load(sharedLink.getFilePath() + "/" + sharedLink.getFileName());
             InputStream stream = encryptionUtil.decryptStream(encryptedStream, key);
-            LOG.info(String.format("Download %s", sharedLink.getId()));
+            log.info(String.format("Download %s", sharedLink.getId()));
             return new FileDownload(
-                    stream,
+                    encryptedStream,
                     sharedLink.getFilePath(),
                     sharedLink.getFileName(),
                     sharedLink.getFileType(),
                     sharedLink.getFileSize(),
                     sharedLink.getCreatedBy());
         } catch (FileNotFoundException e) {
-            LOG.info(String.format("File for download %s is missing", sharedLink.getId()));
+            log.info(String.format("File for download %s is missing", sharedLink.getId()));
             throw new LinkExpiredException();
         } catch (NoSuchAlgorithmException | InvalidKeyException | NoSuchPaddingException | InvalidAlgorithmParameterException e) {
             throw new EncryptionException(e);

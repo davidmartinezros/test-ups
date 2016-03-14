@@ -7,7 +7,6 @@ import com.codahale.metrics.annotation.Timed;
 
 import gov.max.service.file.domain.model.SharedLink;
 import gov.max.service.file.domain.model.Upload;
-import gov.max.service.file.domain.repositories.SharedLinkRepository;
 import gov.max.service.file.services.management.FileDownload;
 import gov.max.service.file.services.management.FileShareManagementService;
 import gov.max.service.file.services.management.FileOperationsService;
@@ -90,9 +89,6 @@ public class ApiController extends ImporterControllerBase {
 
     @Inject
     FileShareManagementService managementService;
-
-    @Autowired
-    private SharedLinkRepository sharedLinkRepository;
 
     @Autowired
     FileOperationsService fileOperationsService;

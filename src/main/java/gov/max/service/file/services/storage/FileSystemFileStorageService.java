@@ -1,7 +1,6 @@
 package gov.max.service.file.services.storage;
 
 import gov.max.service.file.domain.model.SharedLink;
-import gov.max.service.file.domain.repositories.SharedLinkRepository;
 import gov.max.service.file.services.guid.GuidProvider;
 import gov.max.service.file.util.FileUtil;
 
@@ -21,20 +20,20 @@ import java.io.*;
 public class FileSystemFileStorageService implements FileStorageService {
 
     private
-    @Value("${spring.repository.base.path}")
+    @Value("${spring.sharedLinkService.base.path}")
     String fileBasePath;
 
     @Autowired
     private GuidProvider guidProvider;
 
     @Autowired
-    private SharedLinkRepository repository;
+    private SharedLinkService sharedLinkService;
 
     @Autowired
     private FileUtil fileUtil;
 
     @Autowired
-    private Logger logger;
+    private Logger log;
 
     @Override
     public String save(InputStream inputStream, String fileName, String destination) {
@@ -42,7 +41,7 @@ public class FileSystemFileStorageService implements FileStorageService {
         try {
             retval = uploadFile(inputStream, fileName, destination);
         } catch (Exception e) {
-            logger.error("unable to save file: {} in path: {}. Exception: {}", fileName, destination, e.getMessage());
+            log.error("unable to save file: {} in path: {}. Exception: {}", fileName, destination, e.getMessage());
         }
         return retval;
     }
@@ -58,16 +57,17 @@ public class FileSystemFileStorageService implements FileStorageService {
         try {
             input = new FileInputStream(file);
         } catch (Throwable t) {
+            log.error("unable to create file stream for {}", path);
         }
         return input;
     }
 
     @Override
     public void delete(String id) {
-        SharedLink model = repository.findOne(id);
+        SharedLink model = sharedLinkService.findSharedLink(id);
         File srcFile = new File(fileBasePath, model.getFilePath());
         if (!FileUtils.deleteQuietly(srcFile)) {
-            logger.error("unable to delete file: {}. Path: {}", model.getFileName(), model.getFilePath());
+            log.error("unable to delete file: {}. Path: {}", model.getFileName(), model.getFilePath());
         }
     }
 
