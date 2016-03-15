@@ -1850,7 +1850,7 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.dateparser', 'ui.bootst
   formatMonthTitle: 'yyyy',
   maxDate: null,
   maxMode: 'year',
-  minDate: null,
+  minDate: new Date(),
   minMode: 'day',
   ngModelOptions: {},
   shortcutPropagation: false,

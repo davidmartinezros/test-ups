@@ -50,7 +50,8 @@
 
             this.dateOptions = {
                 formatYear: 'yy',
-                startingDay: 1
+                startingDay: 1,
+                minDate: new Date()
             };
 
             this.today = new Date();
@@ -416,7 +417,6 @@
             $timeout( function() {
                 item.opened = !item.opened;
             }, 50);
-
         };
         
         // end datepicker functions

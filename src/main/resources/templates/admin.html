@@ -4,28 +4,7 @@
         <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
         <meta charset="utf-8"/>
         <title>MAX Drive</title>
-        <link rel="stylesheet" href="../bower_components/ng-flow/css/styles.css"/>
         <link rel="icon" type="image/png" href="../img/us-seal.png"/>
-
-        <!-- third party -->
-        <script src="../../bower_components/angular/angular.min.js"></script>
-        <script src="../../bower_components/angular-resource/angular-resource.js"></script>
-        <script src="../../bower_components/angular-translate/angular-translate.min.js"></script>
-        <script src="../../bower_components/angular-cache-buster/angular-cache-buster.js"></script>
-        <script src="../../bower_components/angular-cookies/angular-cookies.min.js"></script>
-        <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
-        <script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-        <script src="../../bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
-        <script src="../../bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-        <script src="../../bower_components/moment/min/moment.min.js"></script>
-        <script src="../../bower_components/flow.js/dist/flow.min.js"></script>
-        <script src="../../bower_components/ng-flow/dist/ng-flow.min.js"></script>
-        <script src="../../bower_components/clipboard/dist/clipboard.min.js"></script>
-        <script src="../../bower_components/ngclipboard/dist/ngclipboard.min.js"></script>
-        <script src="../../bower_components/highlightjs/highlight.pack.min.js"></script>
-        <script src="../../bower_components/sweetalert/dist/sweetalert.min.js"></script>
-        <script src="../../bower_components/ngSweetAlert/SweetAlert.min.js"></script>
-        <script src="../../src/js/tooltips.js"></script>
 
         <link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap.css"/>
         <link rel="stylesheet" href="../../bower_components/angular-bootstrap/ui-bootstrap-csp.css"/>
@@ -36,6 +15,27 @@
         <link rel="stylesheet" href="../../bower_components/primer-css/css/primer.css"/>
         <link rel="stylesheet" href="../../bower_components/sweetalert/dist/sweetalert.css"/>
 
+        <link href="../../src/css/animations.css" rel="stylesheet"/>
+        <link href="../../src/css/dialogs.css" rel="stylesheet"/>
+
+        <!-- third party -->
+        <script src="../../bower_components/angular/angular.min.js"></script>
+        <script src="../../bower_components/angular-resource/angular-resource.js"></script>
+        <script src="../../bower_components/angular-translate/angular-translate.min.js"></script>
+        <script src="../../bower_components/angular-cache-buster/angular-cache-buster.js"></script>
+        <script src="../../bower_components/angular-cookies/angular-cookies.min.js"></script>
+        <script src="../../bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="../../bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+        <script src="../../bower_components/moment/min/moment.min.js"></script>
+        <script src="../../bower_components/flow.js/dist/flow.min.js"></script>
+        <script src="../../bower_components/ng-flow/dist/ng-flow.min.js"></script>
+        <script src="../../bower_components/clipboard/dist/clipboard.min.js"></script>
+        <script src="../../bower_components/ngclipboard/dist/ngclipboard.min.js"></script>
+        <script src="../../bower_components/highlightjs/highlight.pack.min.js"></script>
+        <script src="../../bower_components/sweetalert/dist/sweetalert.min.js"></script>
+        <script src="../../bower_components/ngSweetAlert/SweetAlert.min.js"></script>
+        <script src="../../src/js/tooltips.js"></script>
 
         <!-- /third party -->
 
@@ -55,9 +55,14 @@
         <script src="../../src/js/controllers/clipboard-controller.js"></script>
         <script src="../../src/js/controllers/datepicker.controller.js"></script>
 
-
-        <link href="../../src/css/animations.css" rel="stylesheet"/>
-        <link href="../../src/css/dialogs.css" rel="stylesheet"/>
+        <style>
+            #controlbox
+            {
+                width:250px; /* or whatever width you want. */
+                max-width:250px; /* or whatever width you want. */
+                display: inline-block;
+            }
+        </style>
 
         <!-- Comment if you need to use raw source code -->
         <!--<link href="dist/angular-filemanager.min.css" rel="stylesheet">-->
@@ -89,11 +94,11 @@
             <div class="container-fluid">
                 <div class="navbar-header">
                     <a href="#" class="pull-left"><img style="width:3em;height:3em;margin-top:3px;" src="../img/us-seal.png"/></a>
-                    <a class="navbar-brand" style="font-family: trajan_pro;" th:href="@{/}">MAX Drive</a>
+                    <a class="navbar-brand" style="font-family: 'Trajan Pro', Georgia, 'Times New Roman', Times, serif;" th:href="@{/}">MAX Drive</a>
                 </div>
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav" style="float: right">
-                        <li><a th:href="@{/}" style="font-family: trajan_pro;" class="navbar-nav pull-right">Upload File</a></li>
+                        <li><a th:href="@{/}" class="navbar-nav pull-right">Upload File</a></li>
                     </ul>
                 </div>
             </div>

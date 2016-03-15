@@ -10,8 +10,7 @@
             'flow',
             'ngclipboard',
             'oitozero.ngSweetAlert',
-            'ui.bootstrap',
-            'ui.bootstrap.datepicker'
+            'ui.bootstrap'
         ])
 
         .config(['flowFactoryProvider', function (flowFactoryProvider) {

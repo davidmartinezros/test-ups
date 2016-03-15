@@ -15,7 +15,7 @@
         </encoder>
     </appender>
 
-    <logger name="org.brewman.upload" level="${logback.loglevel}"/>
+    <logger name="gov.max.service.file" level="${logback.loglevel}"/>
 
     <logger name="javax.activation" level="WARN"/>
     <logger name="javax.mail" level="WARN"/>

@@ -62,11 +62,11 @@
                     {{item.model.name | strLimit : 64}}
                     <!--</a>-->
                 </td>
-                <td class="hidden-sm hidden-xs">
+                <td class="hidden-sm hidden-xs controlbox" style="width:170px; max-width:170px;">
                     <div ng-include="config.tplPath + '/item-toolbar.html'"></div>
                 </td>
                 <td class="hidden-xs col-md-5" ng-controller="ngclipboardCtrl">
-                    <div class="input-group col-xs-10">
+                    <div class="input-group col-xs-9">
                         <input id="foo-{{$index}}" type="text" value="{{item.model.shareLink}}" readonly/>
                         <span class="input-group-button">
                             <button class="btn" type="button" ngclipboard="" ngclipboard-success="onSuccess(e);" ngclipboard-error="onError(e);" data-clipboard-target="#foo-{{$index}}">
@@ -84,16 +84,47 @@
 
                 <td class="hidden-xs col-xs-2">
                     <div class="input-group">
-                        <input type="date"
-                               datepicker-popup="{{item.format}}"
-                               date-format="dd/MM/yyyy"
+
+                        <input type="text"
+                               class="form-control"
+                               uib-datepicker-popup="{{item.format}}"
                                ng-model="item.model.date"
                                is-open="item.opened"
-                               min-min="minDate"
-                               ng-change="changeExpirationDate(item, item.model.date)"
                                datepicker-options="item.dateOptions"
+                               ng-change="changeExpirationDate(item, item.model.date)"
+                               ng-required="true"
                                close-text="Close"
-                               class="form-control"/>
+                               alt-input-formats="altInputFormats" readonly/>
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="item.open($event, item)">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </button>
+                        </span>
+
+                        <!--<input type="date"-->
+                               <!--datepicker-popup="{{item.format}}"-->
+                               <!--date-format="dd/MM/yyyy"-->
+                               <!--ng-model="item.model.date"-->
+                               <!--is-open="opened1"-->
+                               <!--min-date="minDate"-->
+                               <!--datepicker-options="item.dateOptions"-->
+                               <!--ng-change="changeExpirationDate(item, item.model.date)"-->
+                               <!--date-disabled="item.disabled(date, mode)"-->
+                               <!--close-text="Close"-->
+                               <!--class="form-control"/>-->
+                        <!--<button class="btn" ng-click="open($event,'opened1')"><span class="glyphicon glyphicon-calendar"></span></button>-->
+
+                        <!--<input date-time ng-model="item.model.date" id="pickerMinSelector" date-change="changeMinMax" date-change="changeExpirationDate(item, item.model.date)" min-date="minDate" view="date" timezone="UTC"/>-->
+                        <!--<input type="date"-->
+                               <!--datepicker-popup="{{item.format}}"-->
+                               <!--date-format="dd/MM/yyyy"-->
+                               <!--ng-model="item.model.date"-->
+                               <!--is-open="item.opened"-->
+                               <!--min="minDate"-->
+                               <!--ng-change="changeExpirationDate(item, item.model.date)"-->
+                               <!--datepicker-options="item.dateOptions"-->
+                               <!--close-text="Close"-->
+                               <!--class="form-control"/>-->
                         <!--<span class="input-group-btn" ng-click="item.open($event, item)">-->
                            <!--<button type="button" class="btn btn-default">-->
                                <!--<em class="glyphicon glyphicon-calendar"></em>-->
