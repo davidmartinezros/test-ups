@@ -188,7 +188,12 @@ public class FileOperationsService {
         br.close();
         JSONObject jObj = new JSONObject(sb.toString());
         JSONObject params = jObj.getJSONObject("params");
-        params.put("userName", securityUtils.getUserDetails().getUsername());
+        try {
+            String user = securityUtils.getUserDetails().getUsername();
+            params.put("userName", user);
+        } catch(Exception e) {
+            params.put("userName", ""); // shared side does not have user session
+        }
 
         return params;
     }
@@ -253,7 +258,7 @@ public class FileOperationsService {
                     el.put("expires", days > 1 ? days + " Days" : days + " Day");
                 }
 
-                el.put("createdBy", securityUtils.getUserDetails().getUsername());
+                el.put("createdBy", model.getCreatedBy());
                 el.put("publicId", model.getPublicId());
                 el.put("shareLink", host + "/share/" + model.getPublicId());
                 el.put("session", fileUtil.extractFileNameFromUncPath(model.getFilePath()));
@@ -287,9 +292,10 @@ public class FileOperationsService {
                 el.put("date", dt.format(new Date(attrs.lastModifiedTime().toMillis())));
                 el.put("size", f.length());
                 el.put("type", f.isFile() ? "file" : "dir");
-                el.put("createdBy", securityUtils.getUserDetails().getUsername());
+                el.put("createdBy", info.getCreatedBy());
                 el.put("deleted", info.getDeleted());
                 el.put("expired", info.getExpired());
+                el.put("userName", info.getCreatedBy());
                 resultList.add(el);
             }
         }
