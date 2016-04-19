@@ -19,6 +19,9 @@ spring:
         file.rest.api.url: /api/*
         host: https://drive.test.max.gov
 
+    thymeleaf.mode: LEGACYHTML5
+    velocity.enabled: false
+
     repository.base.path: /services/sPaasTsT/filebucket
 
     multipart:

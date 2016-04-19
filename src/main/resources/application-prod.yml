@@ -20,6 +20,7 @@ spring:
         host: https://drive.max.gov
 
     thymeleaf.mode: LEGACYHTML5
+    velocity.enabled: false
 
     multipart:
         enabled: true

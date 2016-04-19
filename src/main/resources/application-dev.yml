@@ -22,6 +22,7 @@ spring:
     template.cache: false
     thymeleaf.cache: false
     thymeleaf.mode: LEGACYHTML5
+    velocity.enabled: false
 
     repository.base.path: /Users/jeremyhulick/projects/max/max-file-share
 
