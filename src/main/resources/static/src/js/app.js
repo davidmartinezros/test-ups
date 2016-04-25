@@ -45,6 +45,16 @@
             //Cache everything except rest api requests
             httpRequestInterceptorCacheBusterProvider.setMatchlist([/.*api.*/, /.*protected.*/], true);
         })
+        .config(function ($translateProvider) {
+            $translateProvider.translations('en', {
+                "ribbon": {
+                    "dev": "Development",
+                    "test": "Test",
+                    "uat": "User Acceptance"
+                }
+            });
+            $translateProvider.preferredLanguage('en');
+        })
         .constant('moment', moment);  // register moment.js data/time library
 
 

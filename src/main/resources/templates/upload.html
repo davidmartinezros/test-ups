@@ -9,11 +9,25 @@
         <link rel="stylesheet" href="../bower_components/sweetalert/dist/sweetalert.css"/>
         <link rel="stylesheet" href="../css/btn.css"/>
         <link rel="stylesheet" href="../bower_components/ng-flow/css/styles.css"/>
+
+        <link rel="stylesheet" href="../bower_components/github-fork-ribbon-css/gh-fork-ribbon.css" />
+        <!--[if lt IE 9]>
+            <link rel="stylesheet" href="../bower_components/github-fork-ribbon-css/gh-fork-ribbon.ie.css" />
+        <![endif]-->
+
+        <link rel="stylesheet" href="../bower_components/github-fork-ribbon-css/gh-fork-ribbon.css"/>
         <link rel="icon" type="image/png" href="../img/us-seal.png"/>
         <!--<link rel="stylesheet" href="../css/fileshare-home.css"/>-->
         <style>
             [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
                 display: none !important;
+            }
+            .github-fork-ribbon.dev:before {
+                background-color: #a00000;
+            }
+
+            .github-fork-ribbon.test:before {
+                background-color: #34c000;
             }
         </style>
     </head>
@@ -31,6 +45,9 @@
           ng-controller="FlowEventsController">
 
         <nav class="navbar navbar-default" style="border-radius: 0; color: white; background-color: #428bca;">
+            <!--<div th:if="${ribbonEnv != null}" th:classappend="${ribbonEnv}" class="github-fork-ribbon left-top" translate="" data-th-attr="translate-attr-title='ribbon.' + ${ribbonEnv}"></div>-->
+
+            <page-ribbon></page-ribbon>
             <div class="container-fluid">
                 <div class="navbar-header">
                     <a href="#" class="pull-left"><img style="width:3em;height:3em;margin-top:3px;" src="../img/us-seal.png"/></a>
@@ -190,6 +207,8 @@
         <!-- Uncomment if you need to use raw source code -->
         <script src="../src/js/app.js"></script>
         <script src="../src/js/services/dataservice.js"></script>
+        <script src="../src/js/services/active.profiles.js"></script>
+        <script src="../src/js/directives/page.ribbon.js"></script>
         <script src="../src/js/services/dateutil.service.js"></script>
         <script src="../src/js/services/upload.service.js"></script>
         <script src="../src/js/controllers/generate-pwd-controller.js"></script>

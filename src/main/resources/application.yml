@@ -1,6 +1,5 @@
 spring:
     profiles.active: test
-
     data:
         mongodb:
             uri: mongodb://localhost:27017
@@ -16,6 +15,10 @@ javers:
 # minimum delay between api calls in milliseconds
 rate.limit.delay: 1000
 rate.limit.postpone.delay: 5000
+
+# activeProfiles that are eligable for displaying a UI ribbon indicator
+ribbon:
+    displayOnActiveProfiles: dev,test,uat
 
 # ===================================================================
 # MAX Drive specific properties

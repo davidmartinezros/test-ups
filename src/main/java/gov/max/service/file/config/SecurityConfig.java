@@ -126,6 +126,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .and()
             .authorizeRequests()
                 .antMatchers("/share/**").permitAll()
+                .antMatchers("/api/activeProfiles").permitAll()
                 .antMatchers("/**", "/admin/**").authenticated()
             .and()
                 .addFilter(casAuthenticationFilter())
