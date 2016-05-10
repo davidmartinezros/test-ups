@@ -1,9 +1,9 @@
 package gov.max.service.file.config;
 
+import com.github.mongobee.Mongobee;
 import gov.max.service.file.domain.util.JSR310DateConverters.*;
 
 import com.mongodb.Mongo;
-import org.mongeez.Mongeez;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,9 +12,7 @@ import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Import;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
@@ -75,15 +73,15 @@ public class DatabaseConfiguration extends AbstractMongoConfiguration {
         return new CustomConversions(converters);
     }
 
-//    @Bean
-//    @Profile("!" + Constants.SPRING_PROFILE_FAST)
-//    public Mongeez mongeez() {
-//        log.debug("Configuring Mongeez");
-//        Mongeez mongeez = new Mongeez();
-//        mongeez.setFile(new ClassPathResource("/config/mongeez/master.xml"));
-//        mongeez.setMongo(mongo);
-//        mongeez.setDbName(mongoProperties.getDatabase());
-//        mongeez.process();
-//        return mongeez;
-//    }
+    @Bean
+    public Mongobee mongobee() {
+        log.debug("Configuring Mongobee");
+        Mongobee mongobee = new Mongobee(mongo);
+        mongobee.setDbName(mongoProperties.getDatabase());
+        // package to scan for migrations
+        mongobee.setChangeLogsScanPackage("gov.max.service.file.domain.model.config.dbmigrations");
+        mongobee.setEnabled(true);
+        return mongobee;
+    }
+
 }

@@ -7,7 +7,7 @@ buildscript {
 
     dependencies {
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.12.0'
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.3.0.RELEASE")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.3.5.RELEASE")
         classpath("io.spring.gradle:dependency-management-plugin:0.5.2.RELEASE")
         classpath 'io.gatling:gatling-maven-plugin:2.0.0-RC3'
 
@@ -65,7 +65,9 @@ dependencies {
     compile("org.springframework.security:spring-security-cas:3.2.5.RELEASE")
 
     compile("org.jasig.cas.client:cas-client-core:3.3.3")
-    compile("org.mongeez:mongeez:0.9.6")
+
+    compile "com.github.mongobee:mongobee:0.10"
+    compile "org.mongeez:mongeez:0.9.6"
     compile 'org.javers:javers-spring-boot-starter-mongo:1.5.1'
     compile 'org.mongodb:mongo-java-driver:3.0.4'
 
