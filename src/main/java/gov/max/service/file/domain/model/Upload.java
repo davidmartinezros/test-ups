@@ -73,9 +73,6 @@ public class Upload implements Serializable {
     @Field("completed_at")
     private LocalDate completedAt;
 
-    /*
-     * Manually added because JHipster doesn't generate this type.
-     */
     private List<Boolean> chunks;
 
     public String getId() {

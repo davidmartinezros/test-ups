@@ -1,5 +1,24 @@
 # MAX Drive
+
+## Introduction
+
 A secure link sharing service based on Java/Spring. All files are stored encrypted. Large uploads are handled by [ng-flow](https://github.com/flowjs/ng-flow) and [flow.js](https://github.com/flowjs/flow.js)
+
+## Description
+
+This application uses ng-flow (the file uploader) client connected to a MAX Spring-based application. 
+
+It implements a file uploader Java resource/service that handles the required functions of the ng-flow client library. It will save all uploaded chunks/files into the service home filebucket directory, or local test directory in development mode.
+
+1. The ng-flow client will retrieve a new flow identifier from the server at the start of an upload. There is a REST API method that handles returning a random UUID generated server-side.
+
+2. The client will test if a chunk has already been uploaded returning 502 if it hasn't.  
+
+3. If the test returns a 502, the client will do a Multipart POST with a 1MB chunk of data as the next file chunk. This chunk will be saved off to a chunk temp file.
+
+4. The application tracks which chunks received, and which ones haven't, in a temporary MongoDb document.
+
+5. Once the last chunk arrives the application will merge them back into the original file and delete the temporary chunks.
 
 ## Installation
 
@@ -40,7 +59,7 @@ On the first start, Gradle will download all the Java dependencies. After that, 
 If you run MAX Drive locally (using development profile) then the web interface is running at http://localhost:8080. 
 
 ### REST API
-MAX Drive also offers a simple REST API. 
+MAX Drive also offers a simple REST API. The implementation of the REST service is contained in the gov.max.service.file.web.rest.ApiController class. 
 
 #### Upload
 
