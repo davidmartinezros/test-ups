@@ -32,21 +32,42 @@ Prior to running max-drive, you need to install the following dependencies:
 #### Step 3
 Clone the max-file-share GIT repository and start MAX File Share with the command:
 
-```
+
 Linux/OSX:
-./gradlew bootRun
+
+```./gradlew bootRun```
 
 Windows:
-gradlew.bat bootRun
-```
+
+```gradlew.bat bootRun```
+
 
 Or if you have Foreman installed with:
 
-```
-foreman run ./gradlew bootRun
-```
+
+```foreman run ./gradlew bootRun```
+
 
 On the first start, Gradle will download all the Java dependencies. After that, MAX Drive is running at http://localhost:8080.
+
+### Run (Max)
+ 
+Set the Spring profile for the target environment
+
+- Edit the 'profile' property in gradle.properties and set it to either 'test' or 'production'
+- Edit the 'spring.profiles.active' property in application.yml and set it to either 'test' or 'production'
+
+
+Linux/OSX:
+
+```./gradlew clean assemble```
+
+Windows:
+
+```gradlew.bat clean assemble```
+
+
+This above gradle command will generate the executable jar file in build/libs.
 
 ### Testing
 ```
