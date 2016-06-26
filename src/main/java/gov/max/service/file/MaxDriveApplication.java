@@ -32,6 +32,7 @@ import java.util.Collection;
 @Configuration
 @SpringBootApplication
 @EnableScheduling
+
 @Import(value = JaversMongoAutoConfiguration.class)
 public class MaxDriveApplication extends SpringBootServletInitializer {
 
